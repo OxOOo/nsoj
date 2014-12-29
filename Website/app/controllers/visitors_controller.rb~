@@ -1,0 +1,6 @@
+class VisitorsController < ApplicationController
+	def index
+		@html = '<a href="http://www.baidu.com">baidu</a>\n'+
+			'<script>alert("233");</script>'
+	end
+end
