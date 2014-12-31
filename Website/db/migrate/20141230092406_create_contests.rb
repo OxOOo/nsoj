@@ -5,7 +5,7 @@ class CreateContests < ActiveRecord::Migration
 			t.text :description, limit: 1010, null: false
 			t.datetime :start_time, null: false
 			t.datetime :end_time, null: false
-			t.boolean :hide_problem, defualt: true, null: false
+			t.boolean :hide_problem, default: true, null: false
 			t.references :contest_type
 			t.references :course
 			t.references :user

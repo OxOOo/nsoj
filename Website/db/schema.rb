@@ -51,16 +51,16 @@ ActiveRecord::Schema.define(version: 20141230092611) do
   end
 
   create_table "contests", force: :cascade do |t|
-    t.string   "name",            limit: 60,   null: false
-    t.text     "description",     limit: 1010, null: false
-    t.datetime "start_time",                   null: false
-    t.datetime "end_time",                     null: false
-    t.boolean  "hide_problem",                 null: false
+    t.string   "name",            limit: 60,                  null: false
+    t.text     "description",     limit: 1010,                null: false
+    t.datetime "start_time",                                  null: false
+    t.datetime "end_time",                                    null: false
+    t.boolean  "hide_problem",                 default: true, null: false
     t.integer  "contest_type_id"
     t.integer  "course_id"
     t.integer  "user_id"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
+    t.datetime "created_at",                                  null: false
+    t.datetime "updated_at",                                  null: false
   end
 
   create_table "course_problem_ships", force: :cascade do |t|
@@ -102,12 +102,12 @@ ActiveRecord::Schema.define(version: 20141230092611) do
   end
 
   create_table "messages", force: :cascade do |t|
-    t.text     "body",            limit: 1010, null: false
-    t.boolean  "read",                         null: false
-    t.integer  "from_user_id",                 null: false
-    t.integer  "receive_user_id",              null: false
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
+    t.text     "body",            limit: 1010,                 null: false
+    t.boolean  "read",                         default: false, null: false
+    t.integer  "from_user_id",                                 null: false
+    t.integer  "receive_user_id",                              null: false
+    t.datetime "created_at",                                   null: false
+    t.datetime "updated_at",                                   null: false
   end
 
   create_table "notices", force: :cascade do |t|
@@ -145,28 +145,29 @@ ActiveRecord::Schema.define(version: 20141230092611) do
   end
 
   create_table "problems", force: :cascade do |t|
-    t.string   "name",            limit: 60, null: false
-    t.integer  "environment",                null: false
-    t.integer  "source_limit",               null: false
-    t.integer  "time_limit",                 null: false
-    t.integer  "memory_limit",               null: false
-    t.string   "origin_id",       limit: 30, null: false
-    t.integer  "task",                       null: false
+    t.string   "name",            limit: 60,                 null: false
+    t.integer  "environment",                default: 0,     null: false
+    t.integer  "source_limit",               default: 0,     null: false
+    t.integer  "time_limit",                 default: 0,     null: false
+    t.integer  "memory_limit",               default: 0,     null: false
+    t.string   "origin_id",       limit: 30, default: "0",   null: false
+    t.boolean  "hide",                       default: false, null: false
+    t.integer  "task",                       default: 0,     null: false
     t.integer  "user_id"
     t.integer  "online_judge_id"
     t.integer  "problem_type_id"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
   end
 
   create_table "statistics", force: :cascade do |t|
-    t.integer  "solved_count",         null: false
-    t.integer  "accepted_count",       null: false
-    t.integer  "submission_count",     null: false
+    t.integer  "solved_count",         default: 0, null: false
+    t.integer  "accepted_count",       default: 0, null: false
+    t.integer  "submissions_count",    default: 0, null: false
     t.integer  "statistic_table_id"
     t.string   "statistic_table_type"
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
   end
 
   create_table "statuses", force: :cascade do |t|
@@ -177,44 +178,45 @@ ActiveRecord::Schema.define(version: 20141230092611) do
   end
 
   create_table "submissions", force: :cascade do |t|
-    t.integer  "time",                           null: false
-    t.integer  "memory",                         null: false
-    t.string   "submit_ip",           limit: 30, null: false
-    t.integer  "score",                          null: false
-    t.integer  "source_length",                  null: false
-    t.integer  "submission_score",               null: false
-    t.integer  "task",                           null: false
+    t.integer  "time",                           default: 0, null: false
+    t.integer  "memory",                         default: 0, null: false
+    t.string   "submit_ip",           limit: 30,             null: false
+    t.integer  "score",                          default: 0, null: false
+    t.integer  "source_length",                  default: 0, null: false
+    t.integer  "submission_score",               default: 0, null: false
+    t.integer  "task",                           default: 0, null: false
     t.integer  "user_id"
     t.integer  "statistic_id"
     t.integer  "language_id"
     t.integer  "status_id"
     t.integer  "environment_type_id"
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
   end
 
   create_table "user_course_ships", force: :cascade do |t|
-    t.integer  "status",     null: false
-    t.integer  "level",      null: false
+    t.integer  "status",     default: 1, null: false
+    t.integer  "level",      default: 0, null: false
     t.integer  "user_id"
     t.integer  "course_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
   create_table "users", force: :cascade do |t|
-    t.string   "username",         limit: 30,              null: false
-    t.string   "password",         limit: 35,              null: false
-    t.string   "realname",         limit: 20
-    t.string   "email",            limit: 110
-    t.string   "create_ip",        limit: 30,              null: false
+    t.string   "username",          limit: 30,              null: false
+    t.string   "password",          limit: 40,              null: false
+    t.string   "realname",          limit: 20
+    t.string   "email",             limit: 110
+    t.string   "create_ip",         limit: 30,              null: false
     t.string   "school"
-    t.integer  "solved_count",                 default: 0, null: false
-    t.integer  "accepted_count",               default: 0, null: false
-    t.integer  "submission_count",             default: 0, null: false
-    t.integer  "level",                        default: 0, null: false
-    t.datetime "created_at",                               null: false
-    t.datetime "updated_at",                               null: false
+    t.integer  "current_course_id",             default: 0, null: false
+    t.integer  "solved_count",                  default: 0, null: false
+    t.integer  "accepted_count",                default: 0, null: false
+    t.integer  "submissions_count",             default: 0, null: false
+    t.integer  "level",                         default: 0, null: false
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
   end
 
 end

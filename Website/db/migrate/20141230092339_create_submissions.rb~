@@ -12,6 +12,7 @@ class CreateSubmissions < ActiveRecord::Migration
 			t.references :statistic
 			t.references :language
 			t.references :status
+			t.references :environment_type
 
       			t.timestamps null: false
     		end

@@ -1,7 +1,7 @@
 class UserCourseShip < ActiveRecord::Base
 
 	#常量
-	StatusRefuse = 0
+	StatusRefusee = 0
 	StatusWaiting = 1
 	StatusPassed = 2
 	LevelCommon = 0

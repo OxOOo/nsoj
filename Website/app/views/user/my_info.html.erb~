@@ -1,0 +1,47 @@
+<h1></h1>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-8">
+			<h4 class="text-center">基本资料</h4>
+			<dl class="dl-horizontal">
+				<dt></dt>
+				<dd>第 <%= @current_user.id %> 位用户</dd>
+				<dt class="small">用户名：</dt>
+				<dd><%= @current_user.username %></dd>
+				<dt class="small">真实姓名：</dt>
+				<dd><%= @current_user.realname %></dd>
+				<dt class="small">邮箱：</dt>
+				<dd><%= @current_user.email %></dd>
+				<dt class="small">学校：</dt>
+				<dd><%= @current_user.school %></dd>
+				<dt class="small">权限等级：</dt>
+				<dd><%= @current_user.level_info %></dd>
+				<dt class="small">通过题数：</dt>
+				<dd><%= @current_user.solved.size %></dd>
+				<dt class="small">通过次数：</dt>
+				<dd><%= @current_user.accepted.size %></dd>
+				<dt class="small">提交次数：</dt>
+				<dd><%= @current_user.submissions.size %></dd>
+			</dl>
+		</div>
+		<div class="col-md-4">
+			<h4 class="text-center">最近的登录情况<sub><%= link_to '全部',user_entries_path %></sub></h4>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>登录IP</th>
+						<th>登录时间</th>
+					</tr>
+				</thead>
+				<tbody>
+					<% @current_user.entries.limit(10).each do |entry| %>
+						<tr>
+							<td><%= entry.ip %></td>
+							<td><%= format_time(entry.created_at) %></td>
+						</tr>
+					<% end %>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

@@ -4,4 +4,6 @@ class Notice < ActiveRecord::Base
 
 	belongs_to :course
 	belongs_to :user
+
+	scope :public, -> { where(["course_id = ? or course_id = ?",nil,0]) }
 end

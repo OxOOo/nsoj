@@ -3,4 +3,6 @@ class Message < ActiveRecord::Base
 
 	belongs_to :from_user, class_name: "User", inverse_of: :send_messages
 	belongs_to :receive_user, class_name: "User", inverse_of: :receive_messages
+	
+	scope :notread, -> { where(read: false) }
 end

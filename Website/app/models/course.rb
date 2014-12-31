@@ -1,4 +1,5 @@
 class Course < ActiveRecord::Base
+	validates_presence_of :user_id, message: "创始人不能为空"
 	validates_presence_of :name, message: "课程名称不能为空"
 	validates_presence_of :description, message: "课程描述不能为空"
 	validates_length_of :name, maximum: 200, message: "课程名称长度不能超过200"
@@ -17,4 +18,13 @@ class Course < ActiveRecord::Base
 			self.description = self.name
 		end
 	end
+
+	after_create do
+		UserCourseShip.create!(:user=>self.user, :course=>self, :status=>UserCourseShip::StatusPassed,
+					:level=>UserCourseShip::LevelCreater)
+	end
+
+	#常量
+	LocalCourse = self.first
+	VJudgeCourse = self.second
 end

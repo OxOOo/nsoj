@@ -3,5 +3,8 @@ class Language < ActiveRecord::Base
 	validates :origin_cmd, presence: {message: "编程语言的原编译命令不能为空"}, length: {maximum: 50, message: "编程语言的原编译命令长度不能超过50"}
 	validates :extra_cmd, length: {maximum: 50, message: "编程语言的附加编译命令长度不能超过50"}
 
+	#常量
+	List = self.all
+
 	has_many :submissions
 end

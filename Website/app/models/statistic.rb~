@@ -1,3 +1,6 @@
 class Statistic < ActiveRecord::Base
+	belongs :statistic_table, polymorphic: true
+	has_many :solved, ->{where(score: 100).group(:user_id).having("submission_score=max(submission_score)")}, class_name: "Submission"
+	has_many :accepted, ->{where(score: 100)}, class_name: "Submission"
 	has_many :submissions
 end

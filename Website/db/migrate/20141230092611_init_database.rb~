@@ -15,6 +15,7 @@ class InitDatabase < ActiveRecord::Migration
 		Status.create!(:name=>"超出空间限制",:style=>"mle")
 		Status.create!(:name=>"输出格式错误",:style=>"pe")
 		Status.create!(:name=>"运行时出错",:style=>"re")
+		Status.create!(:name=>"编译失败",:style=>"ce")
 		Status.create!(:name=>"部分正确",:style=>"score")
 
 		#ProblemType
@@ -31,18 +32,13 @@ class InitDatabase < ActiveRecord::Migration
 		EnvironmentType.create!(:name=>"Windows",:description=>"Windows系统")
 		EnvironmentType.create!(:name=>"Linux",:description=>"Ubuntu系统")
 
-		#Course
-		course_local = Course.create!(:name=>"本地题库")
-		course_vjudge = Course.create!(:name=>"虚拟在线评测系统")
-
 		#User
-		root = User.create!(:username=>"root",:password=>Digest::MD5.hexdigest("root"),
-				:password_confirmation=>Digest::MD5.hexdigest("root"),:create_ip=>"127.0.0.1",:level=>4)
+		root = User.create!(:username=>"root",:password=>"root",
+				:password_confirmation=>"root",:create_ip=>"127.0.0.1",:level=>4)
 
-		course_local.user = root
-		course_local.save!
-		course_vjudge.user = root
-		course_vjudge.save!
+		#Course
+		course_local = Course.create!(:name=>"本地题库", :user=>root)
+		course_vjudge = Course.create!(:name=>"虚拟在线评测系统", :user=>root)
   	end
 
 	def down
@@ -64,10 +60,10 @@ class InitDatabase < ActiveRecord::Migration
 		#EnvironmentType
 		EnvironmentType.destroy_all
 
-		#Course
-		Course.destroy_all
-
 		#User
 		User.destroy_all
+
+		#Course
+		Course.destroy_all
 	end
 end
