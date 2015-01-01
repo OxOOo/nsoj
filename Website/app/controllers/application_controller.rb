@@ -22,12 +22,17 @@ class ApplicationController < ActionController::Base
   		if @current_user != nil && @current_user.username == "root" && request.remote_ip != "127.0.0.1"
   			flash[:errors] << "root 用户只能在服务器上登录"
   			@current_user = nil
+  			session[:current_user_id] = nil
   			return redirect_to root_path
   		end
   		if BannedId.valid.where(:banned=>@current_user).exists?
   			flash[:errors] << "#{@current_user.username} 被管理员禁止在 #{format_time(BannedId.valid.where(:banned=>@current_user).first.deadline)} 前登录本网站，请与管理员联系"
   			@current_user = nil
+  			session[:current_user_id] = nil
   			return redirect_to root_path
+  		end
+  		if @current_user != nil
+  			@current_user_course_ship = @current_user.user_course_ships.where(:course=>@current_user.current_course).first
   		end
   	end
   	

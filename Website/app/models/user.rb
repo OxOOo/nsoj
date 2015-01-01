@@ -33,6 +33,10 @@ class User < ActiveRecord::Base
 	has_many :accepted, ->{where(score: 100)}, class_name: "Submission"
 	has_many :submissions
 
+	def all_messages
+		Message.all_messages(self)
+	end
+
 	after_touch do
 		self.solved_count = self.solved.count
 		self.accepted_count = self.accepted.count
@@ -44,11 +48,15 @@ class User < ActiveRecord::Base
 		if Course::LocalCourse != nil
 			local = UserCourseShip.new(:user => self, :course => Course::LocalCourse)
 			local.status = UserCourseShip::StatusPassed
+			local.save!
 		end
 		if Course::VJudgeCourse != nil
 			vjudge = UserCourseShip.new(:user => self, :course => Course::VJudgeCourse)
 			vjudge.status = UserCourseShip::StatusPassed
+			vjudge.save!
 		end
+		self.current_course = self.courses.first
+		self.save
 	end
 	
 	def level_info
@@ -64,4 +72,6 @@ class User < ActiveRecord::Base
 			return "超级管理员"
 		end
 	end
+	
+	self.per_page = 10
 end

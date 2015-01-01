@@ -1,0 +1,41 @@
+<h1></h1>
+<%= form_for @send_message, url: user_messages_path, method: :post, html: {class: "form-horizontal", role: "form"} do |f| %>
+	<fieldset>
+		<legend>发送私信</legend>
+		<% if @send_message.errors.any? %>
+			<div class="alert alert-warning" role="alert">
+				<ul>
+					<% @send_message.errors.messages.each do |error| %>
+						<% error.second.each do |message| %>
+							<li><%= message %></li>
+						<% end %>
+					<% end %>
+				</ul>
+			</div>
+  	<% end %>
+		<div class="form-group">
+    	<label class="col-sm-2 control-label"><span style="color:red">*</span>收信人：</label>
+    	<div class="col-sm-3">
+    		<%= f.text_field :receive_user, class: "form-control", placeholder: "请输入收信人", value: ((@send_message.receive_user == nil)?(""):(@send_message.receive_user.username)) %>
+    	</div>
+  	</div>
+  	<div class="form-group">
+    	<label class="col-sm-2 control-label"><span style="color:red">*</span>标题：</label>
+    	<div class="col-sm-10">
+    		<%= f.text_field :title, class: "form-control", placeholder: "请输入标题" %>
+    	</div>
+  	</div>
+  	<div class="form-group">
+    	<label class="col-sm-2 control-label"><span style="color:red">*</span>内容：</label>
+    	<div class="col-sm-10">
+      	<%= f.text_area :body, class: "form-control", placeholder: "请输入内容" %>
+    	</div>
+  	</div>
+  	<div class="form-group">
+    	<label class="col-sm-2 control-label"></label>
+    	<div class="col-sm-3">
+      	<%= f.submit "发送", class: "btn btn-default" %>
+    	</div>
+  	</div>
+	</fieldset>
+<% end %>

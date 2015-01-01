@@ -1,1 +1,1 @@
-<h1 class="text-center"><%= link_to image_tag('logo.png', class: 'img-responsive', style: 'display:"inline"'), '/' %>南山在线评测系统</h1>
+<h1 class="text-center"><%= link_to image_tag('logo.png', class: 'img-responsive', style: 'display:inline', size: 10), '/' %>南山在线评测系统</h1>

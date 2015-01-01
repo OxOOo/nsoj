@@ -102,6 +102,7 @@ ActiveRecord::Schema.define(version: 20141230092611) do
   end
 
   create_table "messages", force: :cascade do |t|
+    t.string   "title",           limit: 60,                   null: false
     t.text     "body",            limit: 1010,                 null: false
     t.boolean  "read",                         default: false, null: false
     t.integer  "from_user_id",                                 null: false

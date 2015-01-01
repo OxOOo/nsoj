@@ -39,6 +39,9 @@ class InitDatabase < ActiveRecord::Migration
 		#Course
 		course_local = Course.create!(:name=>"本地题库", :user=>root)
 		course_vjudge = Course.create!(:name=>"虚拟在线评测系统", :user=>root)
+		
+		root.current_course = course_local
+		root.save!
   	end
 
 	def down

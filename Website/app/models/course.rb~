@@ -12,6 +12,8 @@ class Course < ActiveRecord::Base
 	has_many :course_problem_ships
 	has_many :problems, through: :course_problem_ships
 	has_many :contests
+	
+	scope :list, -> { order("id DESC").select(:id,:name,:user_id).includes(:user) }
 
 	before_validation do
 		if self.description == nil || self.description == ""
@@ -20,10 +22,13 @@ class Course < ActiveRecord::Base
 	end
 
 	after_create do
-		UserCourseShip.create!(:user => self.user, :course => self, :status => UserCourseShip::StatusPassed)
+		UserCourseShip.create!(:user=>self.user, :course=>self, :status=>UserCourseShip::StatusPassed,
+					:level=>UserCourseShip::LevelCreater)
 	end
 
 	#常量
 	LocalCourse = self.first
 	VJudgeCourse = self.second
+	
+	self.per_page = 10
 end
