@@ -8,7 +8,7 @@ class CreateSubmissions < ActiveRecord::Migration
 			t.integer :source_length, default: 0, null: false
 			t.integer :submission_score, default: 0, null: false
 			t.integer :task, default: 0, null: false
-			t.references :user
+			t.references :user_course_ship
 			t.references :statistic
 			t.references :language
 			t.references :status

@@ -1,7 +1,5 @@
 class CourseController < ApplicationController
-	before_action :check_login, only: [:choose,:my_list,:join,:revoke,:exit,:user_list]
-	before_action :check_logout, only: []
-	
+
 	def list
 		@courses = Course.list.paginate(:page=>params[:page])
 	end
@@ -89,6 +87,6 @@ class CourseController < ApplicationController
 			flash[:error] = "你没有权限查看本页面"
 			return redirect_to :back
 		end
-		@users = @course.users.paginate(:page=>params[:page])
+		@user_course_ships = @course.valid_user_course_ships.list.paginate(:page=>params[:page])
 	end
 end

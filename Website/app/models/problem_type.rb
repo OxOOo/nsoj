@@ -4,6 +4,9 @@ class ProblemType < ActiveRecord::Base
 
 	#常量
 	List = self.all
+	
+	Normal = ProblemType.first
+	NormalSpj = ProblemType.second
 
 	has_many :problems
 end

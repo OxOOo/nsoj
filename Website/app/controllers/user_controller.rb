@@ -1,5 +1,4 @@
 class UserController < ApplicationController
-	before_action :check_login, only: [:logout,:my_info,:modify,:modify_post,:messages,:messages_post,:show_message,:entries]
 	before_action :check_logout, only: [:login,:login_post,:register,:register_post]
 
 	def login

@@ -5,6 +5,9 @@ class CreateUserCourseShips < ActiveRecord::Migration
 			t.integer :level, default: 0, null: false
 			t.references :user
 			t.references :course
+			t.integer :solved_count, default: 0, null: false
+			t.integer :accepted_count, default: 0, null: false
+			t.integer :submissions_count, default: 0, null: false
 
       			t.timestamps null: false
     		end

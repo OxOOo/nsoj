@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141230092611) do
+ActiveRecord::Schema.define(version: 20150102122500) do
 
   create_table "banned_ids", force: :cascade do |t|
     t.integer  "banned_id",  null: false
@@ -186,7 +186,7 @@ ActiveRecord::Schema.define(version: 20141230092611) do
     t.integer  "source_length",                  default: 0, null: false
     t.integer  "submission_score",               default: 0, null: false
     t.integer  "task",                           default: 0, null: false
-    t.integer  "user_id"
+    t.integer  "user_course_ship_id"
     t.integer  "statistic_id"
     t.integer  "language_id"
     t.integer  "status_id"
@@ -196,12 +196,15 @@ ActiveRecord::Schema.define(version: 20141230092611) do
   end
 
   create_table "user_course_ships", force: :cascade do |t|
-    t.integer  "status",     default: 1, null: false
-    t.integer  "level",      default: 0, null: false
+    t.integer  "status",            default: 1, null: false
+    t.integer  "level",             default: 0, null: false
     t.integer  "user_id"
     t.integer  "course_id"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.integer  "solved_count",      default: 0, null: false
+    t.integer  "accepted_count",    default: 0, null: false
+    t.integer  "submissions_count", default: 0, null: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
   end
 
   create_table "users", force: :cascade do |t|

@@ -18,7 +18,7 @@
 				<td><%= course.id %></td>
 				<td><%= link_to course.name, course_path(course) %></td>
 				<td><%= link_to course.user.username, user_path(course.user) %></td>
-				<td><%= link_to '选择', %></td>
+				<td><%= button_to '选择',course_choose_path(course), class: "btn" %></td>
 			</tr>
 		<% end %>
 	</tbody>

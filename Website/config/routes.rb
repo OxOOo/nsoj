@@ -17,12 +17,15 @@ Rails.application.routes.draw do
 	
 	
 	get '/course/list', to: 'course#list', as: 'course_list'
-	get '/course/choose/:course_id', to: 'course#choose', as: 'course_choose'
+	post '/course/choose/:course_id', to: 'course#choose', as: 'course_choose'
 	get '/course/my_list', to: 'course#my_list', as: 'course_my_list'
 	
 	get '/course/:course_id', to: 'course#show', as: 'course'
-	get '/course/:course_id/join', to: 'course#join', as: 'course_join'
-	get '/course/:course_id/revoke', to: 'course#revoke', as: 'course_revoke'
-	get '/course/:course_id/exit', to: 'course#exit', as: 'course_exit'
+	post '/course/:course_id/join', to: 'course#join', as: 'course_join'
+	post '/course/:course_id/revoke', to: 'course#revoke', as: 'course_revoke'
+	post '/course/:course_id/exit', to: 'course#exit', as: 'course_exit'
 	get '/course/:course_id/user_list', to: 'course#user_list', as: 'course_user_list'
+	
+	get '/course/:course_id/problems', to: 'problem#list', as: 'problem_list'
+	get '/course/:course_id/problem/:problem_id', to: 'problem#show', as: 'problem_show'
 end

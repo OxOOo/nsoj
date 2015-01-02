@@ -6,7 +6,11 @@ class CourseProblemShip < ActiveRecord::Base
 	has_many :submissions, through: :statistic
 
 	after_create do
-		self.statistic = Statistic.create
-		self.save
+		self.statistic = Statistic.create!
+		self.save!
 	end
+	
+	scope :list, -> { includes(:statistic,:problem) }
+	
+	self.per_page = 10
 end

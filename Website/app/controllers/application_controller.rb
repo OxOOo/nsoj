@@ -34,14 +34,11 @@ class ApplicationController < ActionController::Base
   		if @current_user != nil
   			@current_user_course_ship = @current_user.user_course_ships.where(:course=>@current_user.current_course).first
   		end
+  		if @current_user == nil && request.path != user_register_path && request.path != user_login_path
+  			flash[:warning] = "请先登录或注册"
+  			return redirect_to user_register_path
+  		end
   	end
-  	
-  	def check_login #检查是否已登录
-  		if @current_user == nil
-				flash[:info] = "请先登录"
-				return redirect_to user_login_path
-			end
-		end
 		
 		def check_logout #检查是否已退出
 			if @current_user != nil

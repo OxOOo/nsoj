@@ -1,5 +1,5 @@
 <h1></h1>
-<%= form_for @user, url: path, method: :post, html: {class: "form-horizontal", role: "form"} do |f| %>
+<%= form_for @user, url: user_register_path, method: :post, html: {class: "form-horizontal", role: "form"} do |f| %>
 	<fieldset>
 		<legend>注册</legend>
 		<% if @user.errors.any? %>
@@ -53,6 +53,7 @@
     	<label class="col-sm-2 control-label"></label>
     	<div class="col-sm-3">
       	<%= f.submit "注册", class: "btn btn-default" %>
+      	<%= link_to "已有帐号", user_login_path %>
     	</div>
   	</div>
 	</fieldset>

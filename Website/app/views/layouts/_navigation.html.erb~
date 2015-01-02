@@ -1,6 +1,6 @@
 <h1></h1>
 <nav class="navbar navbar-default" role="navigation">
-	<div class="container-fluid">
+		<div class="container-fluid">
     	<!-- Brand and toggle get grouped for better mobile display -->
     	<div class="navbar-header">
 			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
@@ -14,38 +14,38 @@
 
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-			<!-- 左边 -->
-			<ul class="nav navbar-nav">
-				<li class="active"><a href="#">Link</a></li>
-				<li><a href="#">Link</a></li>
-				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown">课程</a>
-					<ul class="dropdown-menu" role="menu">
-						<li><%= link_to '列表',course_list_path %></li>
-						<% if @current_user != nil %>
+			<% if @current_user != nil %>
+				<!-- 左边 -->
+				<ul class="nav navbar-nav">
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">课程</a>
+						<ul class="dropdown-menu" role="menu">
+							<li><%= link_to '列表',course_list_path %></li>
+							<li><%= link_to '我的课程列表', course_my_list_path %></li>
 							<li class="divider"></li>
 							<% if @current_user.courses.size <= 10 %>
 								<% @current_user.courses.each do |course| %>
 									<% if @current_user.current_course == course%>
-										<li class="active"><%= link_to course.name, course_choose_path(course) %></li>
+										<li class="active"><%= link_to course.name, course_choose_path(course), method: :post %></li>
 									<% else %>
-										<li><%= link_to course.name, course_choose_path(course) %></li>
+										<li><%= link_to course.name, course_choose_path(course), method: :post %></li>
 									<% end %>
 								<% end %>
 							<% else %>
-								<li><%= link_to @current_user.current_course.name, course_choose_path(@current_user.current_course) %></li>
-								<li><%= link_to '我的课程列表', course_my_list_path %></li>
+								<li class="active"><%= link_to @current_user.current_course.name, course_choose_path(@current_user.current_course), method: :post %></li>
 							<% end %>
-						<% end %>
-					</ul>
-				</li>
-			</ul>
-			<form class="navbar-form navbar-left" role="search">
-				<div class="form-group">
-					<input type="text" class="form-control" placeholder="Search">
-				</div>
-				<button type="submit" class="btn btn-default">Submit</button>
-			</form>
+						</ul>
+					</li>
+					<li class="active"><a href="#">Link</a></li>
+					<li><a href="#">Link</a></li>
+				</ul>
+				<form class="navbar-form navbar-left" role="search">
+					<div class="form-group">
+						<input type="text" class="form-control" placeholder="Search">
+					</div>
+					<button type="submit" class="btn btn-default">Submit</button>
+				</form>
+			<% end %>
 			<!-- 右边 -->
 			<ul class="nav navbar-nav navbar-right">
 				<% if @current_user == nil %>
