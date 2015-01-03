@@ -28,4 +28,9 @@ Rails.application.routes.draw do
 	
 	get '/course/:course_id/problems', to: 'problem#list', as: 'problem_list'
 	get '/course/:course_id/problem/:problem_id', to: 'problem#show', as: 'problem_show'
+	
+	post '/course/:course_id/problem/:problem_id/submit', to: 'submission#submit', as: 'submission_submit'
+	
+	get '/course/:course_id/submissions', to: 'submission#submissions', as: 'submission_list'
+	get '/course/:course_id/submission/:submission_id', to: 'submission#show', as: 'submission_show'
 end

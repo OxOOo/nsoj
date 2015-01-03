@@ -148,7 +148,7 @@ ActiveRecord::Schema.define(version: 20150102122500) do
   create_table "problems", force: :cascade do |t|
     t.string   "name",            limit: 60,                 null: false
     t.integer  "environment",                default: 0,     null: false
-    t.integer  "source_limit",               default: 0,     null: false
+    t.integer  "answer_limit",               default: 0,     null: false
     t.integer  "time_limit",                 default: 0,     null: false
     t.integer  "memory_limit",               default: 0,     null: false
     t.string   "origin_id",       limit: 30, default: "0",   null: false

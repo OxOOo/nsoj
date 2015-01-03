@@ -3,7 +3,8 @@ class Status < ActiveRecord::Base
 	validates :style, presence: {message: "状态的css类型不能为空"}, length: {maximum: 20, message: "状态的css类型长度不能超过20"}
 
 	#常量
-	List = self.all
+	List = Status.all
+	Pending = Status.first
 
 	has_many :submissions
 end

@@ -18,7 +18,7 @@
 				<!-- 左边 -->
 				<ul class="nav navbar-nav">
 					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">课程</a>
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= @current_user.current_course.name %></a>
 						<ul class="dropdown-menu" role="menu">
 							<li><%= link_to '列表',course_list_path %></li>
 							<li><%= link_to '我的课程列表', course_my_list_path %></li>
@@ -36,8 +36,8 @@
 							<% end %>
 						</ul>
 					</li>
-					<li class="active"><a href="#">Link</a></li>
-					<li><a href="#">Link</a></li>
+					<li><%= link_to "题目", problem_list_path(@current_user.current_course) %></li>
+					<li><%= link_to "提交记录", problem_list_path(@current_user.current_course) %></li>
 				</ul>
 				<form class="navbar-form navbar-left" role="search">
 					<div class="form-group">

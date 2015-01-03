@@ -16,9 +16,12 @@ class UserCourseShip < ActiveRecord::Base
 	has_many :submissions
 	
 	after_touch do
-		self.solved_count = self.solved.count if self.solved.count != nil
+		self.solved_count = self.solved.count
 		self.accepted_count = self.accepted.count
 		self.submissions_count = self.submissions.count
+		if self.solved_count == nil
+			self.solved_count = 0
+		end
 		self.save!
 	end
 	

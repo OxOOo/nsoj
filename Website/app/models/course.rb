@@ -12,6 +12,7 @@ class Course < ActiveRecord::Base
 	has_many :course_problem_ships
 	has_many :problems, through: :course_problem_ships
 	has_many :contests
+	has_many :submissions, through: :course_problem_ships
 	
 	scope :list, -> { order('"courses"."id" DESC').select(:id,:name,:user_id).includes(:user) }
 

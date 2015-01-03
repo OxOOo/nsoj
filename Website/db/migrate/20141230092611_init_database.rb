@@ -9,6 +9,9 @@ class InitDatabase < ActiveRecord::Migration
 		Language.create!(:name=>"Pascal",:origin_cmd=>"gcc ./main.pas",:extra_cmd=>" ")
 
 		#Status
+		Status.create!(:name=>"等待测评",:style=>"accepted")
+		Status.create!(:name=>"正在编译",:style=>"accepted")
+		Status.create!(:name=>"正在评测",:style=>"accepted")
 		Status.create!(:name=>"正确",:style=>"accepted")
 		Status.create!(:name=>"错误答案",:style=>"wrong")
 		Status.create!(:name=>"超出时间限制",:style=>"tle")

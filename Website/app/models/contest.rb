@@ -17,6 +17,11 @@ class Contest < ActiveRecord::Base
 			self.description = self.name
 		end
 	end
+	
+	scope :hide_problem, -> { where(["hide_problem = ? AND ? <= end_time",true,Time.now]) }
+	scope :pending, -> {where(["start_time > ?", Time.now]) }
+	scope :running, -> {where(["start_time <= ? AND ? <= end_time", Time.now, Time.now]) }
+	scope :finished, -> {where(["end_time < ?", Time.now]) }
 
 	protected
 		def check_time

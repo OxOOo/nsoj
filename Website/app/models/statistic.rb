@@ -8,6 +8,17 @@ class Statistic < ActiveRecord::Base
 		self.solved_count = self.solved.count
 		self.accepted_count = self.accepted.count
 		self.submissions_count = self.submissions.count
+		if self.solved_count == nil
+			self.solved_count = 0
+		end
 		self.save
+	end
+	
+	def problem
+		if self.statistic_table_type == "CourseProblemShip"
+			return CourseProblemShip.find(self.statistic_table_id).problem
+		else
+			return ContestProblemShip.find(self.statistic_table_id).problem
+		end
 	end
 end

@@ -10,13 +10,18 @@ class Contest < ActiveRecord::Base
 	belongs_to :user
 	has_many :contest_problem_ships
 	has_many :problems, through: :contest_problem_ships
-	has_many :submissions,  through: :contest_problem_ships
+	has_many :submissions, through: :contest_problem_ships
 
 	before_validation do
 		if self.description == nil || self.description == ""
 			self.description = self.name
 		end
 	end
+	
+	scope :hide_problem, -> { where(hide_problem: true) }
+	scope :pending, -> {where(["start_time > ?", Time.now]) }
+	scope :running, -> {where(["start_time <= ? AND ? <= end_time", Time.now, Time.now]) }
+	scope :finished, -> {where(["end_time < ?", Time.now]) }
 
 	protected
 		def check_time
