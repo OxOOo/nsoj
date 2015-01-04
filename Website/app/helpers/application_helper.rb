@@ -28,4 +28,33 @@ module ApplicationHelper
 		end
 		return memory.round(2).to_s + ' ' + units[unit]
 	end
+	
+	def friendly_duration(duration)
+		duration = duration.round(0)
+		second = duration % 60
+		duration /= 60
+		minute = duration % 60
+		duration /= 60
+		hour = duration % 24
+		duration /= 24
+		day = duration
+		
+		str = ""
+		if day != 0
+			str += day.to_s + "天"
+		end
+		if hour != 0
+			str += hour.to_s + "小时"
+		end
+		if minute != 0
+			str += minute.to_s + "分钟"
+		end
+		if second != 0
+			str += second.to_s + "秒"
+		end
+		if str == ""
+			str = "零持续时间"
+		end
+		return str
+	end
 end

@@ -3,7 +3,9 @@ class ContestType < ActiveRecord::Base
 	validates :description, presence: {message: "比赛类型的描述不能为空"}, length: {maximum: 1000, message: "比赛类型的描述长度不能超过1000"}
 
 	#常量
-	List = self.all
+	List = ContestType.all
+	OI = ContestType.first
+	ACM = ContestType.second
 
 	has_many :contests
 end

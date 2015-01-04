@@ -31,6 +31,8 @@ Rails.application.routes.draw do
 	
 	post '/course/:course_id/problem/:problem_id/submit', to: 'submission#submit', as: 'submission_submit'
 	
-	get '/course/:course_id/submissions', to: 'submission#submissions', as: 'submission_list'
+	get '/course/:course_id/submissions', to: 'submission#list', as: 'submission_list'
 	get '/course/:course_id/submission/:submission_id', to: 'submission#show', as: 'submission_show'
+	
+	get '/course/:course_id/contests', to: 'contest#list', as: 'contest_list'
 end

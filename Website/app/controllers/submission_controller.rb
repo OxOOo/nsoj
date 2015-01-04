@@ -3,7 +3,7 @@ class SubmissionController < ApplicationController
 	def submit
 		@course = Course.find(params[:course_id])
 		@user_course_ship = @course.user_course_ships.where(:user=>@current_user).first
-		if (@user_course_ship == nil || @user_course_ship.status != UserCourseShip::StatusPassed) && @current_user.level < User::LevelWatcher
+		if (@user_course_ship == nil || @user_course_ship.status != UserCourseShip::StatusPassed) && @current_user.level < User::LevelAdmin
 			flash[:error] = "提交失败"
 			return redirect_to :back
 		end
@@ -30,7 +30,7 @@ class SubmissionController < ApplicationController
 		return redirect_to submission_list_path
 	end
 	
-	def submissions
+	def list
 		@course = Course.find(params[:course_id])
 		@user_course_ship = @course.user_course_ships.where(:user=>@current_user).first
 		if @current_user.level < User::LevelWatcher && (@user_course_ship == nil || @user_course_ship.status != UserCourseShip::StatusPassed)
