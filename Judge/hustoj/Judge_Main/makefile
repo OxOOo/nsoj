@@ -1,0 +1,2 @@
+all: Judge_Main.cpp
+	g++ -Wall -o Judge_Main Judge_Main.cpp
