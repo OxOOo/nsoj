@@ -1,0 +1,29 @@
+# depslib dependency file v1.0
+1420455745 source:/home/chenyu/nsoj/Judge/main.cpp
+	"Judge_Main.h"
+
+1420455790 /home/chenyu/nsoj/Judge/include/Judge_Main.h
+	<cstdio>
+	"Judge_Client.h"
+
+1420456765 source:/home/chenyu/nsoj/Judge/src/Judge_Client.cpp
+	"Judge_Client.h"
+
+1420461391 /home/chenyu/nsoj/Judge/include/Judge_Client.h
+	<unistd.h>
+	<sys/resource.h>
+	<sys/wait.h>
+	<sys/ptrace.h>
+	<sys/stat.h>
+	<sys/user.h>
+	<cstdio>
+	<cstdlib>
+	<cstring>
+	<iostream>
+	"Config.h"
+
+1420455809 source:/home/chenyu/nsoj/Judge/src/Judge_Main.cpp
+	"Judge_Main.h"
+
+1420460885 /home/chenyu/nsoj/Judge/include/Config.h
+
