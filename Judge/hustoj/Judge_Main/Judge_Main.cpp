@@ -22,8 +22,6 @@ static int DEBUG=0;
 static char oj_home[BUFFER_SIZE];
 static int max_running;
 static int sleep_time;
-static int oj_total;
-static int oj_mod;
 static char http_token[BUFFER_SIZE];
 static char http_get_job_url[BUFFER_SIZE];
 
@@ -91,10 +89,10 @@ void read_int(char * buf,const char * key,int * value)
         sscanf(buf2, "%d", value);
 }
 
-void run_client(int run_id)
+int run_client(int run_id,int client_id)
 {
     pid_t pid=fork();                                   // start to fork
-    if(pid != 0)return;
+    if(pid != 0)return pid;
     if(DEBUG)write_log("<<=sid=%d===clientid=%d==>>\n",run_id);
 
     struct rlimit LIM;
@@ -113,13 +111,14 @@ void run_client(int run_id)
     LIM.rlim_cur=LIM.rlim_max=200;
     setrlimit(RLIMIT_NPROC, &LIM);
 
-    char run_id_str[BUFFER_SIZE];
+    char run_id_str[BUFFER_SIZE],client_id_str[BUFFER_SIZE];
     sprintf(run_id_str,"%d",run_id);
+    sprintf(client_id_str,"%d",client_id);
 
     if (!DEBUG)
-        execl("/usr/bin/Judge_Client","/usr/bin/Judge_Client",run_id_str,oj_home,(char *)NULL);
+        execl("/usr/bin/Judge_Client","/usr/bin/Judge_Client",run_id_str,client_id_str,oj_home,(char *)NULL);
     else
-        execl("/usr/bin/Judge_Client","/usr/bin/Judge_Client",run_id_str,oj_home,"debug",(char *)NULL);
+        execl("/usr/bin/Judge_Client","/usr/bin/Judge_Client",run_id_str,client_id_str,oj_home,"debug",(char *)NULL);
     exit(0);
 }
 
@@ -146,8 +145,8 @@ int read_int_http(FILE * f)
 }
 int get_job()
 {
-    const char * cmd="wget %s?token=%s&total=%d&mod=%d";
-    FILE * fjob=read_cmd_output(cmd,http_get_job_url,http_token,oj_total,oj_mod);
+    const char * cmd="wget %s?token=%s";
+    FILE * fjob=read_cmd_output(cmd,http_get_job_url,http_token);
     int id = read_int_http(fjob);
     pclose(fjob);
     return id;
@@ -156,8 +155,10 @@ int get_job()
 int work()
 {
     static int working_cnt=0;
+    static int ID[100];
 
     int run_id=0;
+    int client_id=0;
 
     run_id=get_job();
     if(!run_id)return 0;
@@ -166,15 +167,20 @@ int work()
     if(DEBUG)write_log("Judging solution %d",run_id);
     if (working_cnt>=max_running)               // if no more client can running
     {
-        waitpid(-1,NULL,0);     // wait 4 one child exit
+        pid_t pid = waitpid(-1,NULL,0);     // wait 4 one child exit
         working_cnt--;
+        while(client_id<max_running && ID[client_id]!=pid)client_id++;
+        ID[client_id]=0;
+    }else{
+        while(client_id<max_running && ID[client_id]!=0)client_id++;
     }
     if(working_cnt<max_running)
     {
         working_cnt++;
-        run_client(run_id);
+        ID[client_id]=run_client(run_id,client_id);
         return run_id;
     }
+    ID[client_id]=0;
     return 0;
 }
 
@@ -246,8 +252,6 @@ void init_conf()
 	http_get_job_url[0]=0;
 	max_running=4;
 	sleep_time=5;
-	oj_total=1;
-	oj_mod=0;
 	fp = fopen("./etc/judge.conf", "r");
 	if(fp!=NULL){
 		while (fgets(buf, BUFFER_SIZE - 1, fp)) {
@@ -255,8 +259,6 @@ void init_conf()
 			read_buf(buf, "OJ_GET_JOB_URL",http_get_job_url);
 			read_int(buf, "OJ_RUNNING", &max_running);
 			read_int(buf, "OJ_SLEEP_TIME", &sleep_time);
-			read_int(buf , "OJ_TOTAL", &oj_total);
-			read_int(buf,"OJ_MOD",&oj_mod);
 		}
 		fclose(fp);
     }

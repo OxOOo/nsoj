@@ -39,6 +39,12 @@
 #define OJ_CE 11
 #define OJ_CO 12
 #define OJ_TR 13
+
+#define ProblemType_Normal 0
+#define ProblemType_Normal_Spj 1
+#define ProblemType_SubmitAnswer 2
+#define ProblemType_Interaction 3
+
 /*copy from ZOJ
  http://code.google.com/p/zoj/source/browse/trunk/judge_client/client/tracer.cc?spec=svn367&r=367#39
  */
@@ -76,6 +82,11 @@ static char http_baseurl[BUFFER_SIZE];
 
 static char http_username[BUFFER_SIZE];
 static char http_password[BUFFER_SIZE];
+
+static char http_token[BUFFER_SIZE];
+static char http_get_solution_info_url[BUFFER_SIZE];
+static char http_get_problem_info_url[BUFFER_SIZE];
+static char http_get_source_url[BUFFER_SIZE];
 
 static int shm_run=0;
 
@@ -784,7 +795,7 @@ int get_proc_status(int pid, const char * mark)
         fclose(pf);
     return ret;
 }
-void _get_solution_http(int solution_id, char * work_dir, int lang)
+void get_source(int solution_id, char * work_dir, int lang)
 {
     char  src_pth[BUFFER_SIZE];
 
@@ -793,17 +804,8 @@ void _get_solution_http(int solution_id, char * work_dir, int lang)
     if (DEBUG)
         printf("Main=%s", src_pth);
 
-    //login();
-
-    const char  * cmd2="wget --post-data=\"getsolution=1&sid=%d\" --load-cookies=cookie --save-cookies=cookie --keep-session-cookies -q -O %s \"%s/admin/problem_judge.php\"";
-    FILE * pout=read_cmd_output(cmd2,solution_id,src_pth,http_baseurl);
-
-    pclose(pout);
-
-}
-void get_solution(int solution_id, char * work_dir, int lang)
-{
-    _get_solution_http(solution_id,  work_dir, lang) ;
+    const char  * cmd="wget -O %s \"%s?token=%s&solution_id=%d\"";
+    execute_cmd(cmd,src_path,http_get_source_url,http_token,solution_id);
 }
 
 void _get_custominput_http(int solution_id, char * work_dir)
@@ -826,39 +828,23 @@ void get_custominput(int solution_id, char * work_dir)
     _get_custominput_http(solution_id,  work_dir) ;
 }
 
-void _get_solution_info_http(int solution_id, int & p_id, char * user_id, int & lang)
+void get_solution_info(int solution_id, int & p_id, int & lang)
 {
-
-    login();
-
-    const char  * cmd="wget --post-data=\"getsolutioninfo=1&sid=%d\" --load-cookies=cookie --save-cookies=cookie --keep-session-cookies -q -O - \"%s/admin/problem_judge.php\"";
-    FILE * pout=read_cmd_output(cmd,solution_id,http_baseurl);
+    const char  * cmd="wget %s?token=%s&solution_id=%d";
+    FILE * pout=read_cmd_output(cmd,http_get_solution_info_url,http_token,solution_id);
     fscanf(pout,"%d",&p_id);
-    fscanf(pout,"%s",user_id);
     fscanf(pout,"%d",&lang);
     pclose(pout);
-
-}
-void get_solution_info(int solution_id, int & p_id, char * user_id, int & lang)
-{
-    _get_solution_info_http(solution_id,p_id,user_id,lang);
 }
 
-void _get_problem_info_http(int p_id, int & time_lmt, int & mem_lmt, int & isspj)
+void get_problem_info(int p_id, int & time_lmt, int & mem_lmt, int & problem_type)
 {
-    //login();
-
-    const char  * cmd="wget --post-data=\"getprobleminfo=1&pid=%d\" --load-cookies=cookie --save-cookies=cookie --keep-session-cookies -q -O - \"%s/admin/problem_judge.php\"";
-    FILE * pout=read_cmd_output(cmd,p_id,http_baseurl);
+    const char  * cmd="wget %s?token=%s&problem_id=%d";
+    FILE * pout=read_cmd_output(cmd,http_get_problem_info_url,http_token,p_id);
     fscanf(pout,"%d",&time_lmt);
     fscanf(pout,"%d",&mem_lmt);
-    fscanf(pout,"%d",&isspj);
+    fscanf(pout,"%d",&problem_type);
     pclose(pout);
-}
-
-void get_problem_info(int p_id, int & time_lmt, int & mem_lmt, int & isspj)
-{
-    _get_problem_info_http(p_id,time_lmt,mem_lmt,isspj);
 }
 
 void prepare_files(char * filename, int namelen, char * infile, int & p_id,
@@ -1492,11 +1478,8 @@ void init_parameters(int argc, char ** argv, int & solution_id,int & runner_id)
     if (argc < 3)
     {
         fprintf(stderr, "Usage:%s solution_id runner_id.\n", argv[0]);
-        fprintf(stderr, "Multi:%s solution_id runner_id judge_base_path.\n",
-                argv[0]);
-        fprintf(stderr,
-                "Debug:%s solution_id runner_id judge_base_path debug.\n",
-                argv[0]);
+        fprintf(stderr, "Multi:%s solution_id runner_id judge_base_path.\n",argv[0]);
+        fprintf(stderr,"Debug:%s solution_id runner_id judge_base_path debug.\n",argv[0]);
         exit(1);
     }
     DEBUG = (argc > 4);
@@ -1619,38 +1602,27 @@ int get_test_file(char* work_dir,int p_id)
 int main(int argc, char** argv)
 {
     char work_dir[BUFFER_SIZE];
-    char user_id[BUFFER_SIZE];
     int solution_id = 1000;
     int runner_id = 0;
-    int p_id, time_lmt, mem_lmt, lang, isspj, sim, sim_s_id,max_case_time=0;
+    int time_lmt, mem_lmt, lang, problem_type, sim, sim_s_id,max_case_time=0;
 
     init_parameters(argc, argv, solution_id, runner_id);
 
     //set work directory to start running & judging
     sprintf(work_dir, "%s/run%s/", oj_home, argv[2]);
-
-    if(shm_run) mk_shm_workdir(work_dir);
-
+    execute_cmd("rm -rf %s",work_dir);
+    execute_cmd("mkdir %s",work_dir);
     chdir(work_dir);
-    execute_cmd("rm %s/*",work_dir);
 
-    get_solution_info(solution_id, p_id, user_id, lang);
-    //get the limit
+    get_solution_info(solution_id, lang,time_lmt, mem_lmt, problem_type);
 
-
-    if(p_id==0)
+    if(problem_type != ProblemType_SubmitAnswer)
     {
-        time_lmt=1;
-        mem_lmt=128;
-        isspj=0;
-    }
-    else
-    {
-        get_problem_info(p_id, time_lmt, mem_lmt, isspj);
-    }
-    //copy source file
+        //copy source file
+        get_source(solution_id, work_dir, lang);
 
-    get_solution(solution_id, work_dir, lang);
+    }else{
+    }
 
     //java is lucky
     if (lang >= 3)
