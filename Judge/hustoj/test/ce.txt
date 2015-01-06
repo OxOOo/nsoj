@@ -1,4 +1,0 @@
-Main.cc: In function ‘int main()’:
-Main.cc:14:6: warning: unused variable ‘c’ [-Wunused-variable]
-  int c=k/b;
-      ^

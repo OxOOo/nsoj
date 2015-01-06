@@ -1,6 +1,7 @@
 # depslib dependency file v1.0
-1420470203 source:/home/chenyu/nsoj/Judge/main.cpp
-	"Judge_Main.h"
+1420527007 source:/home/chenyu/nsoj/Judge/main.cpp
+	"Running.h"
+	<cstring>
 
 1420470203 /home/chenyu/nsoj/Judge/include/Judge_Main.h
 	<cstdio>
@@ -26,4 +27,30 @@
 	"Judge_Main.h"
 
 1420470203 /home/chenyu/nsoj/Judge/include/Config.h
+
+1420527156 /home/chenyu/nsoj/Judge/include/Running.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<dirent.h>
+	<unistd.h>
+	<time.h>
+	<stdarg.h>
+	<ctype.h>
+	<sys/wait.h>
+	<sys/ptrace.h>
+	<sys/types.h>
+	<sys/user.h>
+	<sys/syscall.h>
+	<sys/time.h>
+	<sys/resource.h>
+	<sys/signal.h>
+	<sys/stat.h>
+	<unistd.h>
+
+1420525369 /home/chenyu/nsoj/Judge/include/okcalls.h
+	<sys/syscall.h>
+
+1420525161 source:/home/chenyu/nsoj/Judge/src/Running.cpp
+	"Running.h"
 

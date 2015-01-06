@@ -33,12 +33,9 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="include/Config.h" />
-		<Unit filename="include/Judge_Client.h" />
-		<Unit filename="include/Judge_Main.h" />
+		<Unit filename="include/Running.h" />
 		<Unit filename="main.cpp" />
-		<Unit filename="src/Judge_Client.cpp" />
-		<Unit filename="src/Judge_Main.cpp" />
+		<Unit filename="src/Running.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />

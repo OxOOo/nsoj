@@ -1,3 +1,6 @@
+#ifndef RUNNING_H
+#define RUNNING_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,7 +20,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-#include "okcalls.h"
+//#include "okcalls.h"
 
 #define STD_MB 1048576
 #define STD_T_LIM 2
@@ -59,13 +62,19 @@ static int DEBUG = 1;
 static char oj_home[BUFFER_SIZE];
 static int oi_mode=0;
 
-static char lang_ext[12][8] = { "c", "cc", "pas", "java", "rb", "sh", "py", "php","pl", "cs","m","bas" };
+class Running
+{
+    public:
+        Running();
+        virtual ~Running();
 
-//static int sleep_tmp;
-#define ZOJ_COM
+        int DEBUG;
+        char oj_home[BUFFER_SIZE];
+        int oi_mode;
 
-//static char buf[BUFFER_SIZE];
-
+        void test();
+    protected:
+    private:
 long get_file_size(const char * filename)
 {
     struct stat f_stat;
@@ -101,9 +110,6 @@ void write_log(const char *fmt, ...)
     fclose(fp);
 
 }
-
-int call_counter[512];
-
 int compile(int lang)
 {
     int pid;
@@ -394,9 +400,6 @@ void watch_solution(pid_t pidApp, char * infile, int & ACflg, int isspj,
         ptrace(PTRACE_GETREGS, pidApp, NULL, &reg);
 
         {
-            if (sub == 1 && call_counter[reg.REG_SYSCALL] > 0)
-                call_counter[reg.REG_SYSCALL]--;
-
             if(reg.REG_SYSCALL==SYS_fork||reg.REG_SYSCALL==SYS_clone||reg.REG_SYSCALL==SYS_vfork)//
             {
                 if(sub_level>3&&sub==1)
@@ -454,26 +457,6 @@ void watch_solution(pid_t pidApp, char * infile, int & ACflg, int isspj,
     if(sub_level) exit(0);
     //clean_session(pidApp);
 }
+};
 
-int main(int argc, char** argv)
-{
-    int lang = 1,time_lmt=1,usedtime=0,mem_lmt=4,ACflg=OJ_AC,topmemory=0,p_id=0,PEflg=0;
-    printf("compile:%d\n",compile(lang));
-    pid_t pid = fork();
-    if(pid == 0)
-    {
-        run_solution(lang, ".", time_lmt, usedtime,mem_lmt);
-        exit(0);
-    }
-    else
-    {
-        watch_solution(pid, "input.txt", ACflg,0,
-                       "data.out", "output.txt", 0, lang,
-                       topmemory, mem_lmt, usedtime,time_lmt,p_id,
-                       PEflg, ".");
-        printf("time:%d\n",usedtime);
-        printf("memory:%d\n",topmemory);
-        printf("flag:%d\n",ACflg);
-    }
-    return 0;
-}
+#endif // RUNNING_H
