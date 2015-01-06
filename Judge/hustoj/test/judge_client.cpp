@@ -155,10 +155,7 @@ namespace Runner
                 if(*start_info.stdout_file)
                     freopen(start_info.stdout_file, "w", stdout);
                 if(*start_info.stderr_file)
-                {
-                    printf("open error file\n");
                     freopen(start_info.stderr_file, "w", stderr);
-                }
 
                 // trace me
                 ptrace(PTRACE_TRACEME, 0, NULL, NULL);
@@ -308,7 +305,7 @@ int main(int argc, char** argv)
 {
     Runner::StartInfo start_info;
     Runner::ProcessInfo process_info;
-    char* cmd[] = { "g++", "Main.cc", "-o", "Main","-O2",NULL};
+    char* cmd[] = { "g++", "Main.cc", "-o", "Main",NULL};
     char* error_file = "ce.txt";
     start_info.command = cmd;
     memcpy(start_info.stderr_file,error_file,sizeof(error_file));
@@ -331,6 +328,8 @@ int main(int argc, char** argv)
 
     memcpy(start_info.stdin_file,input_file,sizeof(input_file));
     memcpy(start_info.stdout_file,output_file,sizeof(output_file));
+    printf("%s\n",output_file);
+    printf("%s\n",start_info.stdout_file);
 
     Runner::run_command(start_info,process_info);
 
