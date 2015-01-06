@@ -795,7 +795,7 @@ int get_proc_status(int pid, const char * mark)
         fclose(pf);
     return ret;
 }
-void get_source(int solution_id, char * work_dir, int lang)
+void get_source(int solution_id, int lang)
 {
     char  src_pth[BUFFER_SIZE];
 
@@ -805,7 +805,7 @@ void get_source(int solution_id, char * work_dir, int lang)
         printf("Main=%s", src_pth);
 
     const char  * cmd="wget -O %s \"%s?token=%s&solution_id=%d\"";
-    execute_cmd(cmd,src_path,http_get_source_url,http_token,solution_id);
+    execute_cmd(cmd,src_pth,http_get_source_url,http_token,solution_id);
 }
 
 void _get_custominput_http(int solution_id, char * work_dir)
@@ -828,12 +828,14 @@ void get_custominput(int solution_id, char * work_dir)
     _get_custominput_http(solution_id,  work_dir) ;
 }
 
-void get_solution_info(int solution_id, int & p_id, int & lang)
+void get_solution_info(int solution_id,int& lang,int& time_lmt,int& mem_lmt,int& problem_type)
 {
     const char  * cmd="wget %s?token=%s&solution_id=%d";
     FILE * pout=read_cmd_output(cmd,http_get_solution_info_url,http_token,solution_id);
-    fscanf(pout,"%d",&p_id);
     fscanf(pout,"%d",&lang);
+    fscanf(pout,"%d",&time_lmt);
+    fscanf(pout,"%d",&mem_lmt);
+    fscanf(pout,"%d",&problem_type);
     pclose(pout);
 }
 
@@ -1619,53 +1621,27 @@ int main(int argc, char** argv)
     if(problem_type != ProblemType_SubmitAnswer)
     {
         //copy source file
-        get_source(solution_id, work_dir, lang);
+        get_source(solution_id, lang);
+        int Compile_OK;
+        Compile_OK = compile(lang);
+        if (Compile_OK != 0)
+        {
+            update_solution(solution_id, OJ_CE, 0, 0, 0,0, 0.0);
+            addceinfo(solution_id);
+            if (!DEBUG)
+                clean_workdir(work_dir);
+            else
+                write_log("compile error");
+            exit(0);
+        }
+        else
+        {
+            update_solution(solution_id, OJ_RI, 0, 0, 0,0, 0.0);
+        }
 
     }else{
     }
 
-    //java is lucky
-    if (lang >= 3)
-    {
-        // the limit for java
-        time_lmt = time_lmt + java_time_bonus;
-        mem_lmt = mem_lmt + java_memory_bonus;
-        // copy java.policy
-        execute_cmd( "cp %s/etc/java0.policy %sjava.policy", oj_home, work_dir);
-
-    }
-
-    //never bigger than judged set value;
-    if (time_lmt > 300 || time_lmt < 1)
-        time_lmt = 300;
-    if (mem_lmt > 1024 || mem_lmt < 1)
-        mem_lmt = 1024;
-
-    if (DEBUG)
-        printf("time: %d mem: %d\n", time_lmt, mem_lmt);
-
-    // compile
-    //      printf("%s\n",cmd);
-    // set the result to compiling
-    int Compile_OK;
-
-    Compile_OK = compile(lang);
-    if (Compile_OK != 0)
-    {
-        update_solution(solution_id, OJ_CE, 0, 0, 0,0, 0.0);
-        addceinfo(solution_id);
-        update_user(user_id);
-        update_problem(p_id);
-        if (!DEBUG)
-            clean_workdir(work_dir);
-        else
-            write_log("compile error");
-        exit(0);
-    }
-    else
-    {
-        update_solution(solution_id, OJ_RI, 0, 0, 0,0, 0.0);
-    }
     //exit(0);
     // run
     char fullpath[BUFFER_SIZE];
@@ -1692,21 +1668,6 @@ int main(int argc, char** argv)
     int namelen;
     int usedtime = 0, topmemory = 0;
 
-    //create chroot for ruby bash python
-    if (lang == 4)
-        copy_ruby_runtime(work_dir);
-    if (lang == 5)
-        copy_bash_runtime(work_dir);
-    if (lang == 6)
-        copy_python_runtime(work_dir);
-    if (lang == 7)
-        copy_php_runtime(work_dir);
-    if (lang == 8)
-        copy_perl_runtime(work_dir);
-    if (lang == 9)
-        copy_mono_runtime(work_dir);
-    if (lang == 10)
-        copy_objc_runtime(work_dir);
     // read files and run
     // read files and run
     double pass_rate=0.0;
