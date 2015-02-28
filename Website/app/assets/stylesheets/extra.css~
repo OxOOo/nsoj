@@ -1,0 +1,25 @@
+article p {
+	text-indent: 2em;
+}
+
+.table-text-center td, .table-text-center th {
+	text-align: center;
+}
+
+.control-group {
+	margin-bottom: 18px;
+}
+
+.control-group .editor {
+	width: 100%;
+	height: 500px;
+}
+
+.control-group div.editor {
+	overflow: scroll;
+	border: 1px solid #CCCCCC
+}
+
+.hide {
+	display: none;
+}

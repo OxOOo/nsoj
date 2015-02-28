@@ -1,0 +1,83 @@
+<table class="table table-striped table-bordered table-hover table-text-center">
+	<thead>
+		<tr>
+			<th>编号</th>
+			<th>题目</th>
+			<th>提交者</th>
+			<th>结果</th>
+			<th>语言</th>
+			<th>用时</th>
+			<th>内存</th>
+			<th>文件大小</th>
+			<th>提交时间</th>
+			<th>评测时间</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><%= link_to '#1', status_single_path(0) %></td>
+			<td><%= link_to '#0. Hello World', problems_single_path(0) %></td>
+			<td>admin</td>
+			<td>100</td>
+			<td>C++</td>
+			<td><small>1ms</small></td>
+			<td><small>100KB</small></td>
+			<td><small>100B</small></td>
+			<td><small>2015-02-25 16:17:03</small></td>
+			<td><small><%= link_to '2015-02-25 16:17:03', status_rejudge_path(0) %></small></td>
+		</tr>
+	</tbody>
+</table>
+
+<pre>
+<% code = '#include <iostream>\nusing namespace std;\nint main()\n{\n\tcout << "Hello World" << endl;\n\treturn 0;\n}' %>
+<% code.split('\n').each do |line| %>
+<%= display_code_line line %>
+<% end %>
+</pre>
+
+<div class="panel panel-default">
+  <!-- Table -->
+  <table class="table table-hover">
+    <thead>
+    	<tr>
+    		<th>结果</th>
+    		<th>得分</th>
+    	</tr>
+    </thead>
+    <tbody>
+    	<tr>
+    		<td>Accepted</td>
+    		<td>10</td>
+    	</tr>
+    	<tr>
+    		<td>Wrong Answer</td>
+    		<td>0</td>
+    	</tr>
+    	<tr>
+    		<td>Time Limit Exceeded</td>
+    		<td>0</td>
+    	</tr>
+    	<tr>
+    		<td>Memory Limit Exceeded</td>
+    		<td>0</td>
+    	</tr>
+    	<tr>
+    		<td>Output Limit Exceeded</td>
+    		<td>0</td>
+    	</tr>
+    	<tr>
+    		<td>Runtime Error</td>
+    		<td>0</td>
+    	</tr>
+    	<tr>
+    		<td>Compile Error</td>
+    		<td>0</td>
+    	</tr>
+    	<tr>
+    		<td>Part Right</td>
+    		<td>5</td>
+    	</tr>
+    </tbody>
+  </table>
+</div>

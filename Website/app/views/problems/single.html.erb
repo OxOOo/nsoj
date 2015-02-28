@@ -1,0 +1,61 @@
+<div>
+	<h1 class="text-center">#0. Hello World</h1>
+	<small>时间限制：1s 空间限制：256MB 提交文件大小限制：200K <%= link_to '编辑', problems_edit_path(0) %></small>
+</div>
+<div class="panel panel-default">
+  <div class="panel-body">
+  	<article>
+    	<h3>题目描述</h3>
+    	<p>输入两个数，计算它们的和。</p>
+    	<h3>输入格式</h3>
+    	<p>输入一行两个数a，b。</p>
+    	<h3>输出格式</h3>
+    	<p>输出一行一个数表示a+b。</p>
+    	<h3>数据范围和约定</h3>
+    	<p>0<=a,b<=100</p>
+    	<h3>样例输入输出</h3>
+    	<p>
+    		<h4>输入</h4>
+    		<pre>1 2</pre>
+    		<h4>输出</h4>
+    		<pre>3</pre>
+    		<h4>解释</h4>
+    		<p>1+2=3</p>
+    		<h4>输入</h4>
+    		<pre>11 22</pre>
+    		<h4>输出</h4>
+    		<pre>33</pre>
+    	</p>
+    </article>
+  </div>
+</div>
+
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-default" data-toggle="modal" data-target="#submitModal">
+	提交
+</button>
+<!-- Modal -->
+<div class="modal fade" id="submitModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+      	<%= form_for :problem, url: problems_single_path(0) do |f| %>
+					<div class="container-fluid">
+						<div class="form-group">
+							<select class="form-control" id="language">
+								<option value="1">C++</option>
+								<option value="2">C</option>
+								<option value="3">Pascal</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<textarea id="code" class="form-control" rows="20"></textarea>
+						</div>
+						<button type="submit" class="pull-right btn btn-default">提交</button>
+					</div>
+				<% end %>
+      </div>
+    </div>
+  </div>
+</div>
