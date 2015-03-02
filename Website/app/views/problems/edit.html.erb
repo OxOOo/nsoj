@@ -1,47 +1,43 @@
-<%= form_for :problem, url: problems_edit_path, html: {class: "form-horizontal"} do |f| %>
+<%= form_for @problem, url: problems_edit_path(@problem), html: {class: "form-horizontal"} do |f| %>
   <fieldset>
     <legend>编辑题目</legend>
+    <%= render partial: 'template/table_errors', locals: {errors: @problem.errors} %>
     <div class="form-group">
 		  <label class="col-sm-2 control-label">题目名称</label>
 		  <div class="col-sm-3">
-		    <input type="text" class="form-control" id="username" placeholder="请输入题目名称">
+		  	<%= f.text_field :title, class: "form-control", placeholder: "请输入题目名称" %>
 		  </div>
 		</div>
 		<div class="form-group">
 		  <label class="col-sm-2 control-label">题目类型</label>
 		  <div class="col-sm-3">
-		    <select class="form-control" id="type">
-					<option>传统题目</option>
-					<option>传统SPJ题目</option>
-					<option selected>答案提交式题目</option>
-					<option>交互式题目</option>
-				</select>
+		  	<%= f.select :problem_type, options_from_collection_for_select(ProblemType.all, "id", "title", @problem.problem_type.id), {}, {class: "form-control"} %>
 		  </div>
 		</div>
 		<div class="form-group">
 		  <label class="col-sm-2 control-label">时间限制(ms)</label>
 		  <div class="col-sm-3">
-		    <input type="text" class="form-control" id="time" placeholder="请输入时间限制">
+		  	<%= f.number_field :time_limit, class: "form-control", placeholder: "请输入时间限制" %>
 		  </div>
 		</div>
 		<div class="form-group">
-		  <label class="col-sm-2 control-label">空间限制(KB)</label>
+		  <label class="col-sm-2 control-label">空间限制(B)</label>
 		  <div class="col-sm-3">
-		    <input type="text" class="form-control" id="memory" placeholder="请输入空间限制">
+		  	<%= f.number_field :memory_limit, class: "form-control", placeholder: "请输入空间限制" %>
 		  </div>
 		</div>
 		<div class="form-group">
 		  <div class="col-sm-offset-2 col-sm-3">
 		    <div class="checkbox">
 		      <label>
-		        <input type="checkbox">显示题目
+		      	<%= f.check_box :show %>显示题目
 		      </label>
 		    </div>
 		  </div>
 		</div>
 		<div class="form-group">
 		  <div class="col-sm-offset-2 col-sm-3">
-		    <button type="submit" class="btn btn-default">确定</button>
+		  	<%= f.submit "确定", class: "btn btn-default" %>
 		  </div>
 		</div>
   </fieldset>

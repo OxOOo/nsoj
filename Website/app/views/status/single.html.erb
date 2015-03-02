@@ -14,70 +14,88 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr>
-			<td><%= link_to '#1', status_single_path(0) %></td>
-			<td><%= link_to '#0. Hello World', problems_single_path(0) %></td>
-			<td>admin</td>
-			<td>100</td>
-			<td>C++</td>
-			<td><small>1ms</small></td>
-			<td><small>100KB</small></td>
-			<td><small>100B</small></td>
-			<td><small>2015-02-25 16:17:03</small></td>
-			<td><small><%= link_to '2015-02-25 16:17:03', status_rejudge_path(0) %></small></td>
-		</tr>
+		<%= render partial: "single_row", locals: {status: @status} %>
 	</tbody>
 </table>
 
+<% if @status.problem.problem_type != ProblemType::SubmitAnswerType %>
 <pre>
-<% code = '#include <iostream>\nusing namespace std;\nint main()\n{\n\tcout << "Hello World" << endl;\n\treturn 0;\n}' %>
+<% code = @status.submit %>
 <% code.split('\n').each do |line| %>
 <%= display_code_line line %>
 <% end %>
 </pre>
+<% else %>
+<pre>
+<%= link_to "submit.zip", "status/#{@status.id}_submit.zip" %>
+</pre>
+<% end %>
 
-<div class="panel panel-default">
-  <!-- Table -->
-  <table class="table table-hover">
-    <thead>
-    	<tr>
-    		<th>结果</th>
-    		<th>得分</th>
-    	</tr>
-    </thead>
-    <tbody>
-    	<tr>
-    		<td>Accepted</td>
-    		<td>10</td>
-    	</tr>
-    	<tr>
-    		<td>Wrong Answer</td>
-    		<td>0</td>
-    	</tr>
-    	<tr>
-    		<td>Time Limit Exceeded</td>
-    		<td>0</td>
-    	</tr>
-    	<tr>
-    		<td>Memory Limit Exceeded</td>
-    		<td>0</td>
-    	</tr>
-    	<tr>
-    		<td>Output Limit Exceeded</td>
-    		<td>0</td>
-    	</tr>
-    	<tr>
-    		<td>Runtime Error</td>
-    		<td>0</td>
-    	</tr>
-    	<tr>
-    		<td>Compile Error</td>
-    		<td>0</td>
-    	</tr>
-    	<tr>
-    		<td>Part Right</td>
-    		<td>5</td>
-    	</tr>
-    </tbody>
-  </table>
-</div>
+<% ce = @status.ce %>
+<% if ce != nil %>
+	<div class="panel panel-default">
+		<!-- Table -->
+		<table class="table table-hover">
+		  <thead>
+		  	<tr>
+		  		<th>Compile Error</th>
+		  	</tr>
+		  </thead>
+		  <tbody>
+		  	<tr>
+		  		<td><%= sanitize ce %></td>
+		  	</tr>
+		  </tbody>
+		</table>
+	</div>
+<% else %>
+	<div class="panel panel-default">
+		<!-- Table -->
+		<table class="table table-hover">
+		  <thead>
+		  	<tr>
+		  		<th>结果</th>
+		  		<th>得分</th>
+		  	</tr>
+		  </thead>
+		  <tbody>
+		  	<tr>
+		  		<td>Accepted</td>
+		  		<td>10</td>
+		  	</tr>
+		  	<tr>
+		  		<td>Wrong Answer</td>
+		  		<td>0</td>
+		  	</tr>
+		  	<tr>
+		  		<td>Time Limit Exceeded</td>
+		  		<td>0</td>
+		  	</tr>
+		  	<tr>
+		  		<td>Memory Limit Exceeded</td>
+		  		<td>0</td>
+		  	</tr>
+		  	<tr>
+		  		<td>Output Limit Exceeded</td>
+		  		<td>0</td>
+		  	</tr>
+		  	<tr>
+		  		<td>Runtime Error</td>
+		  		<td>0</td>
+		  	</tr>
+		  	<tr>
+		  		<td>Compile Error</td>
+		  		<td>0</td>
+		  	</tr>
+		  	<tr>
+		  		<td>Part Right</td>
+		  		<td>5</td>
+		  	</tr>
+		  	<tr>
+		  		<td>Running</td>
+		  		<td>0</td>
+		  	</tr>
+		  </tbody>
+		</table>
+	</div>
+<% end %>

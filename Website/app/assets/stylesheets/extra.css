@@ -22,3 +22,7 @@ article p {
 .hide {
 	display: none;
 }
+
+.compact {
+	margin: 0
+}

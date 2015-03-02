@@ -14,45 +14,19 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr>
-			<td><%= link_to '#1', status_single_path(0) %></td>
-			<td><%= link_to '#0. Hello World', problems_single_path(0) %></td>
-			<td>admin</td>
-			<td>100</td>
-			<td>C++</td>
-			<td><small>1ms</small></td>
-			<td><small>100KB</small></td>
-			<td><small>100B</small></td>
-			<td><small>2015-02-25 16:17:03</small></td>
-			<td><small><%= link_to '2015-02-25 16:17:03', status_rejudge_path(0) %></small></td>
-		</tr>
-		<tr>
-			<td><%= link_to '#1', status_single_path(0) %></td>
-			<td><%= link_to '#0. Hello World', problems_single_path(0) %></td>
-			<td>admin</td>
-			<td>100</td>
-			<td>C++</td>
-			<td><small>1ms</small></td>
-			<td><small>100KB</small></td>
-			<td><small>100B</small></td>
-			<td><small>2015-02-25 16:17:03</small></td>
-			<td><small><%= link_to '2015-02-25 16:17:03', status_rejudge_path(0) %></small></td>
-		</tr>
-		<tr>
-			<td><%= link_to '#1', status_single_path(0) %></td>
-			<td><%= link_to '#0. Hello World', problems_single_path(0) %></td>
-			<td>admin</td>
-			<td>100</td>
-			<td>C++</td>
-			<td><small>1ms</small></td>
-			<td><small>100KB</small></td>
-			<td><small>100B</small></td>
-			<td><small>2015-02-25 16:17:03</small></td>
-			<td><small><%= link_to '2015-02-25 16:17:03', status_rejudge_path(0) %></small></td>
-		</tr>
+		<% if @status.any? %>
+			<% @status.each do |status| %>
+				<%= render partial: "single_row", locals: {status: status} %>
+			<% end %>
+		<% else %>
+			<tr>
+				<td colspan="10">无</td>
+			</tr>
+		<% end %>
 	</tbody>
 </table>
 
+<!--
 <nav class="text-center">
 	<ul class="pagination">
 	  <li class="disabled"><%= link_to '<', status_index_path %></li>
@@ -64,4 +38,5 @@
 	  <li><%= link_to '>', status_index_path %></li>
 	</ul>
 </nav>
+-->
 

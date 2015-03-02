@@ -45,4 +45,5 @@ end
 
 gem 'therubyracer'
 gem 'execjs'
+gem 'rubyzip'
 

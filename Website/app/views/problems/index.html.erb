@@ -6,29 +6,17 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr>
-			<td class="text-center"><%= link_to '#1', problems_single_path(0) %></td>
-			<td><%= link_to 'Hello World', problems_single_path(0) %></td>
-		</tr>
-		<tr>
-			<td class="text-center"><%= link_to '#2', problems_single_path(0) %></td>
-			<td><%= link_to 'Hello World', problems_single_path(0) %></td>
-		</tr>
-		<tr>
-			<td class="text-center"><%= link_to '#3', problems_single_path(0) %></td>
-			<td><%= link_to 'Hello World', problems_single_path(0) %></td>
-		</tr>
-		<tr>
-			<td class="text-center"><%= link_to '#4', problems_single_path(0) %></td>
-			<td><%= link_to 'Hello World', problems_single_path(0) %></td>
-		</tr>
-		<tr>
-			<td class="text-center"><%= link_to '#400', problems_single_path(0) %></td>
-			<td><%= link_to 'Hello World', problems_single_path(0) %></td>
-		</tr>
-		<tr>
-			<td class="text-center"><%= link_to '#1', problems_single_path(0) %></td>
-			<td><%= link_to 'Hello World Hello World Hello World Hello World', problems_single_path(0) %></td>
-		</tr>
+		<% if @problems.any? %>
+			<% @problems.each do |problem| %>
+				<tr>
+					<td class="text-center"><%= link_to "##{problem.id}", problems_single_path(problem) %></td>
+					<td><%= link_to problem.title, problems_single_path(problem) %></td>
+				</tr>
+			<% end %>
+		<% else %>
+			<tr>
+				<td class="text-center" colspan="2">无</td>
+			</tr>
+		<% end %>
 	</tbody>
 </table>

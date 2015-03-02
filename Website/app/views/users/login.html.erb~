@@ -1,21 +1,21 @@
-<%= form_for :user, url: users_login_path, html: {class: "form-horizontal"} do |f| %>
+<%= form_for @user, url: users_login_path, html: {class: "form-horizontal"} do |f| %>
   <fieldset>
     <legend>登录</legend>
     <div class="form-group">
 		  <label class="col-sm-2 control-label">用户名</label>
 		  <div class="col-sm-3">
-		    <input type="email" class="form-control" id="username" placeholder="请输入用户名">
+		  	<%= f.text_field :username, class: "form-control", placeholder: "请输入用户名" %>
 		  </div>
 		</div>
 		<div class="form-group">
 		  <label class="col-sm-2 control-label">密码</label>
 		  <div class="col-sm-3">
-		    <input type="password" class="form-control" id="password" placeholder="请输入密码">
+		  	<%= f.password_field :password, class: "form-control", placeholder: "请输入密码" %>
 		  </div>
 		</div>
 		<div class="form-group">
 		  <div class="col-sm-offset-2 col-sm-3">
-		    <button type="submit" class="btn btn-default">登录</button>
+		  	<%= f.submit, "登录", class: "btn btn-default" %>
 		  </div>
 		</div>
   </fieldset>

@@ -17,7 +17,6 @@ article p {
 
 .control-group div.editor {
 	overflow: scroll;
-	border: 1px solid #CCCCCC
 }
 
 .hide {

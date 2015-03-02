@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	$("#preview").hide();
+	$(".preview").hide();
 
   $("#editor-button-preview").click(function(){
   	$(this).addClass("btn-default");
@@ -7,10 +7,10 @@ $(document).ready(function(){
   	$("#editor-button-edit").removeClass("btn-default");
   	$("#editor-button-edit").addClass("btn-link");
   	
-  	$("#description").hide();
-  	$("#preview").show();
+  	$(".edit").hide();
+  	$(".preview").show();
   	
-  	$("#preview").html($("#description").val());
+  	$(".preview").html($(".edit").val());
   });
   $("#editor-button-edit").click(function(){
   	$(this).addClass("btn-default");
@@ -18,7 +18,7 @@ $(document).ready(function(){
   	$("#editor-button-preview").removeClass("btn-default");
   	$("#editor-button-preview").addClass("btn-link");
   	
-  	$("#description").show();
-  	$("#preview").hide();
+  	$(".edit").show();
+  	$(".preview").hide();
   });
 });

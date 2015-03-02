@@ -10,15 +10,17 @@
   			<button id="editor-button-preview" class="btn btn-link">预览</button>
   		</div>
   		
-			<%= form_for :problem, url: problems_edit_description_path do |f| %>
+			<%= form_for @problem, url: problems_edit_description_path(@problem) do |f| %>
 				<fieldset>
 					<div class="form-group">
 						<div class="control-group">
-							<textarea id="description" class="form-control editor"></textarea>
-							<div id="preview" class="editor"></div>
+							<article>
+								<%= f.text_area :description, class: "form-control editor edit" %>
+								<div id="preview" class="editor preview"></div>
+							</article>
 						</div>
 					</div>
-					<button type="submit" class="btn btn-default">确定</button>
+					<%= f.submit "确定", class: "btn btn-default" %>
 					<button class="btn btn-success histroy-back">上一步</button>
 				</fieldset>
 			<% end %>
