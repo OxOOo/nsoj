@@ -1,0 +1,22 @@
+#include <iostream>
+#include <cstdio>
+#include <ctime>
+using namespace std;
+
+#define RESULT_AC		101
+#define RESULT_WA		102
+#define RESULT_TLE	103
+#define RESULT_MLE	104
+#define RESULT_OLE	105
+#define RESULT_RE		106
+#define RESULT_CE		107
+#define RESULT_PR		108
+#define RESULT_RI		109
+#define RESULT_CI		110
+#define RESULT_SE		111
+
+int test_index; //测试数据组数
+int total_score; //单个测试点总分
+
+int add(int a, int b)
+{

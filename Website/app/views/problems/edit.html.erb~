@@ -27,6 +27,12 @@
 		  </div>
 		</div>
 		<div class="form-group">
+		  <label class="col-sm-2 control-label">测试数据组数</label>
+		  <div class="col-sm-3">
+		  	<%= f.number_field :test_count, class: "form-control", placeholder: "请输入空间限制" %>
+		  </div>
+		</div>
+		<div class="form-group">
 		  <div class="col-sm-offset-2 col-sm-3">
 		    <div class="checkbox">
 		      <label>
@@ -38,7 +44,6 @@
 		<div class="form-group">
 		  <div class="col-sm-offset-2 col-sm-3">
 		  	<%= f.submit "确定", class: "btn btn-default" %>
-		    <button type="submit" class="btn btn-default">确定</button>
 		  </div>
 		</div>
   </fieldset>

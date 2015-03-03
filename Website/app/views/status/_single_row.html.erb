@@ -13,8 +13,8 @@
 	<% elsif status.finish == false%>
 		<td><small>评测中</small></td>
 	<% elsif @current_user != nil && @current_user.admin %>
-		<td><small><%= display_friendly_datetime(status.updated_at) %></small></td>
-	<% else %>
 		<td><small><%= link_to display_friendly_datetime(status.updated_at), status_rejudge_path(status) %></small></td>
+	<% else %>
+		<td><small><%= display_friendly_datetime(status.updated_at) %></small></td>
 	<% end %>
 </tr>

@@ -23,7 +23,7 @@ class UsersController < ApplicationController
 	def logout
 		flash[:success] = "退出成功"
 		session[:current_user_id] = nil
-		return redirect_to :back
+		return redirect_to root_path
 	end
 	
 	def register

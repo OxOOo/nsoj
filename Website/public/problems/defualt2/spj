@@ -1,0 +1,56 @@
+#include <iostream>
+#include <cstdio>
+using namespace std;
+
+#define RESULT_AC		101
+#define RESULT_WA		102
+#define RESULT_TLE	103
+#define RESULT_MLE	104
+#define RESULT_OLE	105
+#define RESULT_RE		106
+#define RESULT_CE		107
+#define RESULT_PR		108
+#define RESULT_RI		109
+#define RESULT_CI		110
+#define RESULT_SE		111
+
+int test_index; //测试数据组数
+int total_score; //单个测试点总分
+char* input_filename; //输入文件
+char* output_filename; //用户输出文件
+char* answer_filename; //标准输出文件
+char* scoure_filename; //源代码文件
+int language_id; //语言类型
+
+int main(int argc, char* argv[])
+{
+	test_index = atoi(argv[1]);
+	total_score = atoi(argv[2]);
+	input_filename = argv[3];
+	output_filename = argv[4];
+	answer_filename = argv[5];
+	scoure_filename = argv[6];
+	language_id = atoi(argv[7]);
+	
+	FILE* std_file = fopen(output_filename, "r");
+	FILE* ans_file = fopen(answer_filename, "r");
+	
+	if(!std_file || !ans_file)
+	{
+		if(std_file)fclose(std_file);
+		if(ans_file)fclose(ans_file);
+		return RESULT_WA;
+	}
+	
+	int std, ans;
+	if(fscanf(std_file, "%d", &std) == EOF)
+		return total_score;
+	if(fscanf(ans_file, "%d", &ans) == EOF)
+		return RESULT_WA;
+	
+	if(std == ans)
+		return total_score;
+	else return RESULT_WA;
+	
+	return 0;
+}

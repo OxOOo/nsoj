@@ -34,7 +34,7 @@ class ProblemsController < ApplicationController
 	
 	def edit_submit
 		@problem = Problem.find(params[:problem_id])
-		if @problem.update(params[:problem].permit(:title, :time_limit, :memory_limit, :show)) && @problem.update(:problem_type_id =>params[:problem][:problem_type].to_i)
+		if @problem.update(params[:problem].permit(:title, :time_limit, :memory_limit, :show, :test_count)) && @problem.update(:problem_type_id =>params[:problem][:problem_type].to_i)
 			flash[:success] = "修改成功"
 			return redirect_to problems_edit_description_path(@problem)
 		else

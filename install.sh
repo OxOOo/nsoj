@@ -8,3 +8,5 @@ cd ruby-2.1.5
 ./configure
 make
 sudo make install
+
+sudo useradd -m -u 1536 judge

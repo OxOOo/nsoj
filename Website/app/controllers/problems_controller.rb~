@@ -17,7 +17,7 @@ class ProblemsController < ApplicationController
 			flash[:error] = "参数错误"
 			return redirect_to :back
 		end
-		@status = Status.new(:problem=>@problem, :user=>@current_user, :language=>params[:status][:language])
+		@status = Status.new(:problem=>@problem, :user=>@current_user, :language_id=>params[:status][:language])
 		@status.save!
 		@status.submit = params[:status][:submit]
 		return redirect_to status_single_path(@status)

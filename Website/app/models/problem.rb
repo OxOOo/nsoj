@@ -9,61 +9,62 @@ class Problem < ActiveRecord::Base
 	scope :visible, -> { where(show: true) }
 	
 	def description
-		return nil if not File.exists?("problems/#{self.id}/description")
-		file = File.open("problems/#{self.id}/description", "r")
+		return nil if not File.exists?("public/problems/#{self.id}/description")
+		file = File.open("public/problems/#{self.id}/description", "r")
 		str = file.read
 		file.close
 		return str
 	end
 	
 	def description=(str)
-		File.open("problems/#{self.id}/description", "w") do |file|
+		File.open("public/problems/#{self.id}/description", "w") do |file|
 			file.write(str)
 		end
 	end
 	
 	def spj
-		return nil if not File.exists?("problems/#{self.id}/spj")
-		file = File.open("problems/#{self.id}/spj", "r")
+		return nil if not File.exists?("public/problems/#{self.id}/spj")
+		file = File.open("public/problems/#{self.id}/spj", "r")
 		str = file.read
 		file.close
 		return str
 	end
 	
 	def spj=(str)
-		File.open("problems/#{self.id}/spj", "w") do |file|
+		File.open("public/problems/#{self.id}/spj", "w") do |file|
 			file.write(str)
 		end
 	end
 	
 	def spj_file
-		file_name = "problems/#{self.id}/spj"
+		file_name = "public/problems/#{self.id}/spj"
 		file_name = nil if not File.exists?(file_name)
 		return file_name
 	end
 	
 	def front
-		return nil if not File.exists?("problems/#{self.id}/front")
-		file = File.open("problems/#{self.id}/front", "r")
+		return nil if not File.exists?("public/problems/#{self.id}/front")
+		file = File.open("public/problems/#{self.id}/front", "r")
 		str = file.read
 		file.close
 		return str
 	end
 	
 	def front=(str)
-		File.open("problems/#{self.id}/front", "w") do |file|
+		File.open("public/problems/#{self.id}/front", "w") do |file|
 			file.write(str)
 		end
 	end
 	
 	def front_file
-		file_name = "problems/#{self.id}/front"
+		file_name = "public/problems/#{self.id}/front"
 		file_name = nil if not File.exists?(file_name)
 		return file_name
 	end
 	
 	def front_slightly
-		lines = IO.readlines("problems/#{self.id}/front")
+		return "\n" if not File.exists?("public/problems/#{self.id}/front")
+		lines = IO.readlines("public/problems/#{self.id}/front")
 		return "\n" if lines == nil || lines.length == 0
 		if lines.length <= 5
 			return lines.join
@@ -73,27 +74,28 @@ class Problem < ActiveRecord::Base
 	end
 	
 	def back
-		return nil if not File.exists?("problems/#{self.id}/back")
-		file = File.open("problems/#{self.id}/back", "r")
+		return nil if not File.exists?("public/problems/#{self.id}/back")
+		file = File.open("public/problems/#{self.id}/back", "r")
 		str = file.read
 		file.close
 		return str
 	end
 	
 	def back=(str)
-		File.open("problems/#{self.id}/back", "w") do |file|
+		File.open("public/problems/#{self.id}/back", "w") do |file|
 			file.write(str)
 		end
 	end
 	
 	def back_file
-		file_name = "problems/#{self.id}/back"
+		file_name = "public/problems/#{self.id}/back"
 		file_name = nil if not File.exists?(file_name)
 		return file_name
 	end
 	
 	def back_slightly
-		lines = IO.readlines("problems/#{self.id}/back")
+		return "\n" if not File.exists?("public/problems/#{self.id}/back")
+		lines = IO.readlines("public/problems/#{self.id}/back")
 		return "\n" if lines == nil || lines.length == 0
 		if lines.length <= 5
 			return lines.join
@@ -103,14 +105,14 @@ class Problem < ActiveRecord::Base
 	end
 	
 	def data=(io)
-		File.open("problems/#{self.id}/data.zip", "wb") do |file|
+		File.open("public/problems/#{self.id}/data.zip", "wb") do |file|
 			file.write(io.read)
 		end
 	end
 	
 	def data_input(index)
 		file_name = "input#{index}.txt"
-		Zip::File.open("problems/#{self.id}/data.zip") do |zipfile|
+		Zip::File.open("public/problems/#{self.id}/data.zip") do |zipfile|
 			file = zipfile.glob(file_name).first
 			return file.get_input_stream.read if file != nil
 		end
@@ -119,7 +121,7 @@ class Problem < ActiveRecord::Base
 	
 	def data_output(index)
 		file_name = "output#{index}.txt"
-		Zip::File.open("problems/#{self.id}/data.zip") do |zipfile|
+		Zip::File.open("public/problems/#{self.id}/data.zip") do |zipfile|
 			file = zipfile.glob(file_name).first
 			return file.get_input_stream.read if file != nil
 		end
@@ -129,12 +131,12 @@ class Problem < ActiveRecord::Base
 	def new_record
 		problem = self.dup
 		problem.save!
-		Dir.entries("problems/#{self.id}").each do |sub|
+		Dir.entries("public/problems/#{self.id}").each do |sub|
 	  	if sub != '.' && sub != '..'
-			  if File.directory?("problems/#{self.id}/#{sub}")
-			    FileUtils.cp_r "problems/#{self.id}/#{sub}", "problems/#{problem.id}"
+			  if File.directory?("public/problems/#{self.id}/#{sub}")
+			    FileUtils.cp_r "public/problems/#{self.id}/#{sub}", "public/problems/#{problem.id}"
 			  else
-			    FileUtils.cp_r "problems/#{self.id}/#{sub}", "problems/#{problem.id}/#{sub}"
+			    FileUtils.cp_r "public/problems/#{self.id}/#{sub}", "public/problems/#{problem.id}/#{sub}"
 	    	end
 	  	end
 	  end
@@ -156,8 +158,8 @@ class Problem < ActiveRecord::Base
 		end
 	
 	after_create do
-		Dir.mkdir("problems") if not Dir.exists?("problems")
-		#rmdir("problems/#{self.id}") if Dir.exists?("problems/#{self.id}")
-		Dir.mkdir("problems/#{self.id}") if not Dir.exists?("problems/#{self.id}")
+		Dir.mkdir("public/problems") if not Dir.exists?("public/problems")
+		rmdir("public/problems/#{self.id}") if Dir.exists?("public/problems/#{self.id}")
+		Dir.mkdir("public/problems/#{self.id}") if not Dir.exists?("public/problems/#{self.id}")
 	end
 end

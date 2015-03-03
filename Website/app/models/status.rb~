@@ -37,7 +37,7 @@ class Status < ActiveRecord::Base
 	
 	def submit_zip(index)
 		file_name = "answer#{index}.txt"
-		Zip::File.open("problems/#{self.id}/data.zip") do |zipfile|
+		Zip::File.open("status/#{self.id}_submit.zip") do |zipfile|
 			file = zipfile.glob(file_name).first
 			return file.get_input_stream.read if file != nil
 		end
@@ -55,8 +55,8 @@ class Status < ActiveRecord::Base
 	def ce=(data)
 		File.delete "status/#{self.id}_ce" if File.exists?("status/#{self.id}_ce")
 		if data != nil
-			File.open("status/#{self.id}_ce", "w") do |file|
-				file.write(data)
+			File.open("status/#{self.id}_ce", "wb") do |file|
+				file.write(data.read)
 			end
 		end
 	end
@@ -72,13 +72,21 @@ class Status < ActiveRecord::Base
 	def result=(data)
 		File.delete "status/#{self.id}_result" if File.exists?("status/#{self.id}_result")
 		if data != nil
-			File.open("status/#{self.id}_result", "w") do |file|
-				file.write(data)
+			File.open("status/#{self.id}_result", "wb") do |file|
+				file.write(data.read)
 			end
 		end
 	end
 	
+	def init
+		self.update!(:score=>0, :time=>0, :memory=>0, :task=>false, :finish=>false)
+		self.ce = nil
+		self.result = nil
+	end
+	
 	after_create do
 		Dir.mkdir("status") if not Dir.exists?("status")
+		File.delete submit_file() if File.exists? submit_file()
+		init
 	end
 end

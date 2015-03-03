@@ -30,7 +30,7 @@ class JudgerController < ApplicationController
 	
 	def get_status_submit_zip
 		@status = Status.find(params[:status_id])
-		return render plain: @status.data_input(params[:index])
+		return render plain: @status.submit_zip(params[:index])
 	end
 	
 	def get_problem_info
@@ -39,6 +39,7 @@ class JudgerController < ApplicationController
 		result += "\n#{@problem.problem_type_id}"
 		result += "\n#{@problem.time_limit}"
 		result += "\n#{@problem.memory_limit}"
+		result += "\n#{@problem.test_count}"
 		return render plain: result
 	end
 	
@@ -78,14 +79,14 @@ class JudgerController < ApplicationController
 	
 	def update_status_ce
 		@status = Status.find(params[:status_id])
-		return render json: params
-		@status.ce = params[:file]
+		@status.ce = request.body
+		#return render plain: request.body.read
 		return render plain: "Y"
 	end
 	
 	def update_status_result
 		@status = Status.find(params[:status_id])
-		@status.result = params[:file]
+		@status.result = request.body
 		return render plain: "Y"
 	end
 	

@@ -53,6 +53,7 @@ class UsersController < ApplicationController
 		elsif @user.update(params[:user].permit(:password, :password_confirmation)) == false
 			return render :edit
 		else
+			flash[:success] = "修改成功"
 			return redirect_to root_path
 		end
 	end

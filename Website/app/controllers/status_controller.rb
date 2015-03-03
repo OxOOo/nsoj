@@ -11,9 +11,7 @@ class StatusController < ApplicationController
 	
 	def rejudge
 		@status = Status.find(params[:status_id])
-		@status.update!(:task=>false, :finish=>false)
-		@status.ce = nil
-		@status.result = nil
+		@status.init
 		return redirect_to status_index_path
 	end
 

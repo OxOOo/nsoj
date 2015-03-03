@@ -38,6 +38,7 @@ ActiveRecord::Schema.define(version: 20150301132300) do
     t.integer  "time_limit",                 default: 0,     null: false
     t.integer  "memory_limit",               default: 0,     null: false
     t.integer  "submit_limit",               default: 0,     null: false
+    t.integer  "test_count",                 default: 10,    null: false
     t.boolean  "show",                       default: false, null: false
     t.boolean  "judge",                      default: false, null: false
     t.datetime "created_at",                                 null: false

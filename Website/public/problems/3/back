@@ -1,0 +1,18 @@
+}
+
+int main(int argc, char* argv[])
+{
+	test_index = atoi(argv[1]);
+	total_score = atoi(argv[2]);
+	
+	int a,b;
+	scanf("%d%d", &a, &b);
+	int time_stamp = clock();
+	int result = add(a, b);
+	if(result != a + b)
+		return RESULT_AC;
+	if(clock() - time_stamp > 1000)
+		return RESULT_TLE;
+	
+	return total_score;
+}

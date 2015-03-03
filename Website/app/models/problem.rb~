@@ -63,6 +63,7 @@ class Problem < ActiveRecord::Base
 	end
 	
 	def front_slightly
+		return "\n" if not File.exists?("problems/#{self.id}/front")
 		lines = IO.readlines("problems/#{self.id}/front")
 		return "\n" if lines == nil || lines.length == 0
 		if lines.length <= 5
@@ -93,6 +94,7 @@ class Problem < ActiveRecord::Base
 	end
 	
 	def back_slightly
+		return "\n" if not File.exists?("problems/#{self.id}/back")
 		lines = IO.readlines("problems/#{self.id}/back")
 		return "\n" if lines == nil || lines.length == 0
 		if lines.length <= 5
@@ -118,7 +120,7 @@ class Problem < ActiveRecord::Base
 	end
 	
 	def data_output(index)
-		file_name = "input#{index}.txt"
+		file_name = "output#{index}.txt"
 		Zip::File.open("problems/#{self.id}/data.zip") do |zipfile|
 			file = zipfile.glob(file_name).first
 			return file.get_input_stream.read if file != nil
@@ -157,7 +159,7 @@ class Problem < ActiveRecord::Base
 	
 	after_create do
 		Dir.mkdir("problems") if not Dir.exists?("problems")
-		#rmdir("problems/#{self.id}") if Dir.exists?("problems/#{self.id}")
+		rmdir("problems/#{self.id}") if Dir.exists?("problems/#{self.id}")
 		Dir.mkdir("problems/#{self.id}") if not Dir.exists?("problems/#{self.id}")
 	end
 end
