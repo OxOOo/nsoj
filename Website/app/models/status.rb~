@@ -6,8 +6,8 @@ class Status < ActiveRecord::Base
 	scope :list, -> { order(id: :desc) }
 	
 	def submit
-		return nil if not File.exists?("status/#{self.id}_submit")
-		file = File.open("status/#{self.id}_submit", "r")
+		return nil if not File.exists?("public/status/#{self.id}_submit")
+		file = File.open("public/status/#{self.id}_submit", "r")
 		str = file.read
 		file.close
 		return str
@@ -15,11 +15,11 @@ class Status < ActiveRecord::Base
 	
 	def submit=(data)
 		if self.problem.problem_type == ProblemType::SubmitAnswerType
-			File.open("status/#{self.id}_submit.zip", "wb") do |file|
+			File.open("public/status/#{self.id}_submit.zip", "wb") do |file|
 				file.write(data.read)
 			end
 		else
-			File.open("status/#{self.id}_submit", "w") do |file|
+			File.open("public/status/#{self.id}_submit", "w") do |file|
 				file.write(data)
 			end
 		end
@@ -27,9 +27,9 @@ class Status < ActiveRecord::Base
 	
 	def submit_file
 		if self.problem.problem_type != ProblemType::SubmitAnswerType
-			file_name = "status/#{self.id}_submit"
+			file_name = "public/status/#{self.id}_submit"
 		else
-			file_name = "status/#{self.id}_submit.zip"
+			file_name = "public/status/#{self.id}_submit.zip"
 		end
 		file_name = nil if not File.exists?(file_name)
 		return file_name
@@ -37,7 +37,7 @@ class Status < ActiveRecord::Base
 	
 	def submit_zip(index)
 		file_name = "answer#{index}.txt"
-		Zip::File.open("status/#{self.id}_submit.zip") do |zipfile|
+		Zip::File.open("public/status/#{self.id}_submit.zip") do |zipfile|
 			file = zipfile.glob(file_name).first
 			return file.get_input_stream.read if file != nil
 		end
@@ -45,34 +45,34 @@ class Status < ActiveRecord::Base
 	end
 	
 	def ce
-		return nil if not File.exists?("status/#{self.id}_ce")
-		file = File.open("status/#{self.id}_ce", "r")
+		return nil if not File.exists?("public/status/#{self.id}_ce")
+		file = File.open("public/status/#{self.id}_ce", "r")
 		str = file.read
 		file.close
 		return str
 	end
 	
 	def ce=(data)
-		File.delete "status/#{self.id}_ce" if File.exists?("status/#{self.id}_ce")
+		File.delete "public/status/#{self.id}_ce" if File.exists?("public/status/#{self.id}_ce")
 		if data != nil
-			File.open("status/#{self.id}_ce", "wb") do |file|
+			File.open("public/status/#{self.id}_ce", "wb") do |file|
 				file.write(data.read)
 			end
 		end
 	end
 	
 	def result
-		return nil if not File.exists?("status/#{self.id}_result")
-		file = File.open("status/#{self.id}_result", "r")
+		return nil if not File.exists?("public/status/#{self.id}_result")
+		file = File.open("public/status/#{self.id}_result", "r")
 		str = file.read
 		file.close
 		return str
 	end
 	
 	def result=(data)
-		File.delete "status/#{self.id}_result" if File.exists?("status/#{self.id}_result")
+		File.delete "public/status/#{self.id}_result" if File.exists?("public/status/#{self.id}_result")
 		if data != nil
-			File.open("status/#{self.id}_result", "wb") do |file|
+			File.open("public/status/#{self.id}_result", "wb") do |file|
 				file.write(data.read)
 			end
 		end
@@ -85,7 +85,7 @@ class Status < ActiveRecord::Base
 	end
 	
 	after_create do
-		Dir.mkdir("status") if not Dir.exists?("status")
+		Dir.mkdir("public/status") if not Dir.exists?("public/status")
 		File.delete submit_file() if File.exists? submit_file()
 		init
 	end

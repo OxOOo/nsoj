@@ -1,0 +1,7 @@
+Main.cpp: In function ‘int main()’:
+Main.cpp:6:9: error: ‘a’ was not declared in this scope
+  cin >> a >> b;
+         ^
+Main.cpp:6:14: error: ‘b’ was not declared in this scope
+  cin >> a >> b;
+              ^

@@ -21,7 +21,7 @@ int daemon_init(void)
  	close(1); /* close stdout */
  	close(2); /* close stderr */
  	
- 	return 0; 
+ 	return 0;
 }
 
 int lockfile(int fd)
@@ -123,6 +123,7 @@ int work()
 	fscanf(file, "%d", &status_id);
 	fscanf(file, "%d", &problem_id);
 	fscanf(file, "%d", &language_id);
+	pclose(file);
 	
 	if(DEBUG){
 		printf("running solution id: %d problem: %d language: %d\n", status_id, problem_id, language_id);
@@ -154,7 +155,7 @@ int work()
 int main(int argc, char* argv[])
 {
 	//chdir(oj_home.c_str());// change the dir
-	if (!DEBUG && daemon_init() != 0) return -1;
+	if (!DEBUG && daemon_init() != 0) return 1;
 	if (already_running()){
 		syslog(LOG_ERR|LOG_DAEMON, "This daemon program is already running!\n");
 		return 1;

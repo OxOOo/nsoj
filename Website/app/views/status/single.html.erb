@@ -27,7 +27,7 @@
 </pre>
 <% else %>
 <pre>
-<%= link_to "submit.zip", "status/#{@status.id}_submit.zip" %>
+<%= link_to "submit.zip", "/status/#{@status.id}_submit.zip" %>
 </pre>
 <% end %>
 
@@ -43,7 +43,7 @@
 		  </thead>
 		  <tbody>
 		  	<tr>
-		  		<td><%= sanitize ce %></td>
+		  		<td><%= ce %></td>
 		  	</tr>
 		  </tbody>
 		</table>

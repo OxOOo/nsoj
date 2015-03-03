@@ -63,12 +63,12 @@ class ProblemsController < ApplicationController
 			return render :edit_judge
 		end
 		@problem.data = params[:problem][:data] if params[:problem][:data] != nil
-		if @problem.problem_type == ProblemType::NormalSpjType || @problem.problem_type == ProblemType::InteractionType
+		if @problem.problem_type == ProblemType::NormalSpjType || @problem.problem_type == ProblemType::SubmitAnswerType
 			@problem.spj = params[:problem][:spj]
-			if @problem.problem_type == ProblemType::InteractionType
-				@problem.front = params[:problem][:front]
-				@problem.back = params[:problem][:back]
-			end
+		end
+		if @problem.problem_type == ProblemType::InteractionType
+			@problem.front = params[:problem][:front]
+			@problem.back = params[:problem][:back]
 		end
 		return redirect_to problems_single_path(@problem)
 	end

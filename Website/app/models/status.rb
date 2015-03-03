@@ -86,7 +86,7 @@ class Status < ActiveRecord::Base
 	
 	after_create do
 		Dir.mkdir("public/status") if not Dir.exists?("public/status")
-		File.delete submit_file() if File.exists? submit_file()
+		File.delete submit_file() if submit_file() != nil
 		init
 	end
 end

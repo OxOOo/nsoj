@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstdio>
 #include <ctime>
+#include <cstdlib>
 using namespace std;
 
 #define RESULT_AC		101

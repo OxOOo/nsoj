@@ -53,7 +53,7 @@ const string judger_update_status_result_path = "judger/update_status_result" ;
 
 const int STD_MB = 1048576;
 const int BUFFER_SIZE = 1024;
-const bool DEBUG = true;
+const bool DEBUG = false;
 
 const string oj_home = "/home/judge" ;
 const int sleep_time = 10 ;
@@ -84,7 +84,19 @@ int execute_cmd(const char * fmt, ...)
     vsprintf(cmd, fmt, ap);
     va_end(ap);
     
-    return system(cmd);
+    pid_t pid = fork();
+    if(pid == 0)
+    {
+    	fclose(stdin);
+    	fclose(stdout);
+    	fclose(stderr);
+    	exec(cmd);
+    	exit(1);
+    }else{
+    	int status = 0;
+    	waitpid(pid,&status,0);
+    	return status;
+    }
 }
 
 string num2str(int num)

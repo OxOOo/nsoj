@@ -18,9 +18,7 @@ module ApplicationHelper
 	end
 	
 	def display_friendly_datetime(datetime)
-		time = time.to_f
-		return "#{time}ms" if  time < 1000
-		return "#{time/1000}s"
+		return datetime.to_s
 	end
 	
 	def test
