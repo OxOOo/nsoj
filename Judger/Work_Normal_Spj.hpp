@@ -6,6 +6,9 @@
 
 void work_normal_spj()
 {
+	result.push(Result::Sub("Compiling", 0));
+	update_result();
+
 	//download scoure code
 	execute_cmd("wget -q -O \"Main.%s\" %s%s/%d", language_ext[language_id], host_path.c_str(), judger_get_status_submit_path.c_str(), status_id);
 	
@@ -43,12 +46,19 @@ void work_normal_spj()
 	status["score"] = 0;
 	status["finish"] = 0;
 	
+	result.pop();
 	for(int index = 1; index <= test_count; index ++)
 	{
 		if(DEBUG)
 		{
 			printf("[%d] running %d\n", status_id, index);
 		}
+		result.push(Result::Sub("Running", 0));
+		update_result();
+		
+		int total_score = 100 / test_count;
+		if(100 % test_count > test_count - index)
+			total_score ++;
 	
 		//download input file
 		execute_cmd("wget -q -O \"input.txt\" %s%s/%d/%d", host_path.c_str(), judger_get_problem_input_path.c_str(), problem_id, index);
@@ -74,18 +84,24 @@ void work_normal_spj()
     memcpy(start_info.stdout_file,output_file,strlen(output_file));
 
     Runner::run_command(start_info,process_info);
+    result.pop();
 
 		if(process_info.exit_code == 0 && process_info.flag == Runner::ProcessInfo::Success)
 		{
-			int total_score = 100 / test_count;
-			if(100 % test_count > test_count - index)
-				total_score ++;
 			int flag = compare_spj(index, total_score, "input.txt", "output.txt", "answer.txt", (string("Main") + language_ext[language_id]).c_str(), language_id);
 			if(0 < flag && flag <= total_score)
 			{
 				status["time"] = max(status["time"], process_info.time);
 				status["memory"] = max(status["memory"], process_info.memory);
 				status["score"] = status["score"] + flag;
+				if(flag == total_score)
+				{
+					result.push(Result::Sub("Accepted", total_score));
+				}else{
+					result.push(Result::Sub("Part Right", flag));
+				}
+			}else{
+				result.push(flag2sub(flag));
 			}
 		}
 		
@@ -93,6 +109,8 @@ void work_normal_spj()
 		{
 			printf("[%d] score %lld\n", status_id, status["score"]);
 		}
+		update_status();
+		update_result();
 	}
 	status["finish"] = 1;
 	update_status();

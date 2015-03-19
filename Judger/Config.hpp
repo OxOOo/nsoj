@@ -57,7 +57,7 @@ const bool DEBUG = false;
 
 const string oj_home = "/home/judge" ;
 const int sleep_time = 10 ;
-const int max_running = 4 ;
+const int max_running = 2 ;
 const int judge_client_uid = 1536;
 
 const char* language_ext[5] = { "", "txt", "cpp", "c", "pas" };

@@ -3,6 +3,7 @@
 
 #include "Config.hpp"
 #include <map>
+#include <vector>
 
 typedef long long LL;
 namespace Runner
@@ -90,175 +91,218 @@ namespace Runner
     }
     void run_command(const StartInfo& start_info,ProcessInfo& process_info)
     {
-        process_info.init();
-        pid_t pid = fork();
-        if(pid == 0)//child
-        {
-                if(*start_info.work_dir)
-                    chdir(start_info.work_dir);
-                if(*start_info.stdin_file)
-                    freopen(start_info.stdin_file, "r", stdin);
-                else fclose(stdin);
-                if(*start_info.stdout_file)
-                    freopen(start_info.stdout_file, "w", stdout);
-                else fclose(stdout);
-                if(*start_info.stderr_file)
-                    freopen(start_info.stderr_file, "w", stderr);
-                else fclose(stderr);
+    		for(int times = 10; times --;)
+    		{
+		      process_info.init();
+		      pid_t pid = fork();
+		      if(pid == 0)//child
+		      {
+		              if(*start_info.work_dir)
+		                  chdir(start_info.work_dir);
+		              if(*start_info.stdin_file)
+		                  freopen(start_info.stdin_file, "r", stdin);
+		              else fclose(stdin);
+		              if(*start_info.stdout_file)
+		                  freopen(start_info.stdout_file, "w", stdout);
+		              else fclose(stdout);
+		              if(*start_info.stderr_file)
+		                  freopen(start_info.stderr_file, "w", stderr);
+		              else fclose(stderr);
 
-                // trace me
-                ptrace(PTRACE_TRACEME, 0, NULL, NULL);
+		              // trace me
+		              ptrace(PTRACE_TRACEME, 0, NULL, NULL);
 
-                // set the limit
-                struct rlimit LIM; // time limit, file limit& memory limit
+		              // set the limit
+		              struct rlimit LIM; // time limit, file limit& memory limit
 
-                // time limit
-                if(start_info.time_limit)
-                {
-                    LIM.rlim_cur = start_info.time_limit/1000 + 1;
-                    LIM.rlim_max = LIM.rlim_cur;
-                    setrlimit(RLIMIT_CPU, &LIM);
-                    alarm(0);
-                    alarm(start_info.time_limit/1000*2 + 1);
-                }
+		              // time limit
+		              if(start_info.time_limit)
+		              {
+		                  LIM.rlim_cur = start_info.time_limit/1000 + 1;
+		                  LIM.rlim_max = LIM.rlim_cur;
+		                  setrlimit(RLIMIT_CPU, &LIM);
+		                  alarm(0);
+		                  alarm(start_info.time_limit/1000*2 + 1);
+		              }
 
-                // file limit
-                if(start_info.file_limit)
-                {
-                    LIM.rlim_max = start_info.file_limit + STD_MB;
-                    LIM.rlim_cur = start_info.file_limit;
-                    setrlimit(RLIMIT_FSIZE, &LIM);
-                }
+		              // file limit
+		              if(start_info.file_limit)
+		              {
+		                  LIM.rlim_max = start_info.file_limit + STD_MB;
+		                  LIM.rlim_cur = start_info.file_limit;
+		                  setrlimit(RLIMIT_FSIZE, &LIM);
+		              }
 
-                // proc limit
-                if(start_info.process_limit)
-                {
-                    LIM.rlim_cur=LIM.rlim_max=start_info.process_limit;
-                    setrlimit(RLIMIT_NPROC, &LIM);
-                }
+		              // proc limit
+		              if(start_info.process_limit)
+		              {
+		                  LIM.rlim_cur=LIM.rlim_max=start_info.process_limit;
+		                  setrlimit(RLIMIT_NPROC, &LIM);
+		              }
 
-                // set the stack
-                if(start_info.stack_memory_limit)
-                {
-                    LIM.rlim_cur = start_info.stack_memory_limit;
-                    LIM.rlim_max = start_info.stack_memory_limit;
-                    setrlimit(RLIMIT_STACK, &LIM);
-                }
+		              // set the stack
+		              if(start_info.stack_memory_limit)
+		              {
+		                  LIM.rlim_cur = start_info.stack_memory_limit;
+		                  LIM.rlim_max = start_info.stack_memory_limit;
+		                  setrlimit(RLIMIT_STACK, &LIM);
+		              }
 
-                // set the memory
-                if(start_info.memory_limit)
-                {
-                    LIM.rlim_cur = start_info.memory_limit/2*3;
-                    LIM.rlim_max = start_info.memory_limit*2;
-                    setrlimit(RLIMIT_AS, &LIM);
-                }
+		              // set the memory
+		              if(start_info.memory_limit)
+		              {
+		                  LIM.rlim_cur = start_info.memory_limit/2*3;
+		                  LIM.rlim_max = start_info.memory_limit*2;
+		                  setrlimit(RLIMIT_AS, &LIM);
+		              }
 
-                nice(19);
-                if(start_info.uid != 0)
-                {
-                    while(setgid(start_info.uid)!=0) sleep(1);
-                    while(setuid(start_info.uid)!=0) sleep(1);
-                    while(setresuid(start_info.uid, start_info.uid, start_info.uid)!=0) sleep(1);
-                }
+		              nice(19);
+		              if(start_info.uid != 0)
+		              {
+		                  while(setgid(start_info.uid)!=0) sleep(1);
+		                  while(setuid(start_info.uid)!=0) sleep(1);
+		                  while(setresuid(start_info.uid, start_info.uid, start_info.uid)!=0) sleep(1);
+		              }
 
-                if(start_info.is_path_file)
-                    execvp(start_info.command[0], (char * const *) start_info.command);
-                else execv(start_info.command[0], (char * const *) start_info.command);
-                printf("error\n");
-                exit(1);
-        }else{//parent
-                process_info.flag = ProcessInfo::Success;
+		              if(start_info.is_path_file)
+		                  execvp(start_info.command[0], (char * const *) start_info.command);
+		              else execv(start_info.command[0], (char * const *) start_info.command);
+		              printf("error\n");
+		              exit(1);
+		      }else{//parent
+		              process_info.flag = ProcessInfo::Success;
 
-                LL temp_memory;
-                int status, sig;
-                struct rusage ruse;
-                while (1)
-                {
-                    // check the usage
-                    wait4(pid, &status, 0, &ruse);
+		              LL temp_memory;
+		              int status, sig;
+		              struct rusage ruse;
+		              while (1)
+		              {
+		                  // check the usage
+		                  wait4(pid, &status, 0, &ruse);
 
-                    temp_memory = get_proc_status(pid, "VmPeak:") << 10;
-                    if (temp_memory > process_info.memory)
-                        process_info.memory = temp_memory;
+		                  temp_memory = get_proc_status(pid, "VmPeak:") << 10;
+		                  if (temp_memory > process_info.memory)
+		                      process_info.memory = temp_memory;
 
-                    if (process_info.memory > start_info.memory_limit && start_info.memory_limit != 0)
-                    {
-                        if (DEBUG)
-                            printf("out of memory %lld\n", process_info.memory);
-                        if (process_info.flag == ProcessInfo::Success)
-                            process_info.flag = ProcessInfo::MemoryLimitError;
-                        ptrace(PTRACE_KILL, pid, NULL, NULL);
-                        break;
-                    }
+		                  if (process_info.memory > start_info.memory_limit && start_info.memory_limit != 0)
+		                  {
+		                      if (DEBUG)
+		                          printf("out of memory %lld\n", process_info.memory);
+		                      if (process_info.flag == ProcessInfo::Success)
+		                          process_info.flag = ProcessInfo::MemoryLimitError;
+		                      ptrace(PTRACE_KILL, pid, NULL, NULL);
+		                      break;
+		                  }
 
-                    if (WIFEXITED(status))
-                    {
-                        process_info.exit_code = WEXITSTATUS(status);
-                        break;
-                    }
+		                  if (WIFEXITED(status))
+		                  {
+		                      process_info.exit_code = WEXITSTATUS(status);
+		                      break;
+		                  }
 
-                    if (start_info.file_limit != 0 && get_file_size(start_info.stdout_file) + get_file_size(start_info.stderr_file) > start_info.file_limit)
-                    {
-                        process_info.flag = ProcessInfo::OutputLimitError;
-                        ptrace(PTRACE_KILL, pid, NULL, NULL);
-                        break;
-                    }
+		                  if (start_info.file_limit != 0 && get_file_size(start_info.stdout_file) + get_file_size(start_info.stderr_file) > start_info.file_limit)
+		                  {
+		                      process_info.flag = ProcessInfo::OutputLimitError;
+		                      ptrace(PTRACE_KILL, pid, NULL, NULL);
+		                      break;
+		                  }
 
-                    if (WIFSIGNALED(status))//异常结束
-                    {
-                        /*  WIFSIGNALED: if the process is terminated by signal
-                        *
-                        *  psignal(int sig, char *s)，like perror(char *s)，print out s, with error msg from system of sig
-                        * sig = 5 means Trace/breakpoint trap
-                        * sig = 11 means Segmentation fault
-                        * sig = 25 means File size limit exceeded
-                        */
-                        sig = WTERMSIG(status);
-                        if (DEBUG)
-                        {
-                            printf("WTERMSIG=%d\n", sig);
-                        }
-                        if (process_info.flag==ProcessInfo::Success)
-                        {
-                            switch (sig)
-                            {
-                                case SIGCHLD:case SIGALRM:
-                                    alarm(0);
-                                case SIGKILL:case SIGXCPU:
-                                    process_info.flag=ProcessInfo::TimeLimitError;
-                                    break;
-                                case SIGXFSZ:
-                                    process_info.flag=ProcessInfo::OutputLimitError;
-                                    break;
-                                default:
-                                    process_info.flag=ProcessInfo::RuntimeError;
-                            }
-                        }
-                        break;
-                    }
-                    /*     comment from http://www.felix021.com/blog/read.php?1662
-                        WIFSTOPPED: return true if the process is paused or stopped while ptrace is watching on it
-                        WSTOPSIG: get the signal if it was stopped by signal
-                    */
+		                  if (WIFSIGNALED(status))//异常结束
+		                  {
+		                      /*  WIFSIGNALED: if the process is terminated by signal
+		                      *
+		                      *  psignal(int sig, char *s)，like perror(char *s)，print out s, with error msg from system of sig
+		                      * sig = 5 means Trace/breakpoint trap
+		                      * sig = 11 means Segmentation fault
+		                      * sig = 25 means File size limit exceeded
+		                      */
+		                      sig = WTERMSIG(status);
+		                      if (DEBUG)
+		                      {
+		                          printf("WTERMSIG=%d\n", sig);
+		                      }
+		                      if (process_info.flag==ProcessInfo::Success)
+		                      {
+		                          switch (sig)
+		                          {
+		                              case SIGCHLD:case SIGALRM:
+		                                  alarm(0);
+		                              case SIGKILL:case SIGXCPU:
+		                                  process_info.flag=ProcessInfo::TimeLimitError;
+		                                  break;
+		                              case SIGXFSZ:
+		                                  process_info.flag=ProcessInfo::OutputLimitError;
+		                                  break;
+		                              default:
+		                                  process_info.flag=ProcessInfo::RuntimeError;
+		                          }
+		                      }
+		                      break;
+		                  }
+		                  /*     comment from http://www.felix021.com/blog/read.php?1662
+		                      WIFSTOPPED: return true if the process is paused or stopped while ptrace is watching on it
+		                      WSTOPSIG: get the signal if it was stopped by signal
+		                  */
 
-                    // check the system calls
-                    ptrace(PTRACE_SYSCALL, pid, NULL, NULL);
-            }
-            process_info.time  = ruse.ru_utime.tv_sec * 1000 + ruse.ru_utime.tv_usec / 1000;
-            process_info.time += ruse.ru_stime.tv_sec * 1000 + ruse.ru_stime.tv_usec / 1000;
-            
-            if(process_info.flag == ProcessInfo::Success)
-            {
-            	if(start_info.time_limit != 0 && process_info.time > start_info.time_limit)
-            		process_info.flag = ProcessInfo::TimeLimitError;
-            	if(start_info.memory_limit != 0 && process_info.memory > start_info.memory_limit)
-            		process_info.flag = ProcessInfo::MemoryLimitError;
-            	if(process_info.exit_code == 1 && get_file_size(start_info.stdout_file) == 6)
-            		process_info.flag = ProcessInfo::Failed;
-            }
-        }
+		                  // check the system calls
+		                  ptrace(PTRACE_SYSCALL, pid, NULL, NULL);
+		          }
+		          process_info.time  = ruse.ru_utime.tv_sec * 1000 + ruse.ru_utime.tv_usec / 1000;
+		          process_info.time += ruse.ru_stime.tv_sec * 1000 + ruse.ru_stime.tv_usec / 1000;
+		          
+		          if(process_info.flag == ProcessInfo::Success)
+		          {
+		          	if(start_info.time_limit != 0 && process_info.time > start_info.time_limit)
+		          		process_info.flag = ProcessInfo::TimeLimitError;
+		          	if(start_info.memory_limit != 0 && process_info.memory > start_info.memory_limit)
+		          		process_info.flag = ProcessInfo::MemoryLimitError;
+		          	if(process_info.exit_code == 1 && get_file_size(start_info.stdout_file) == 6)
+		          		process_info.flag = ProcessInfo::Failed;
+		          }
+		      }
+				  
+				  if(process_info.flag != Runner::ProcessInfo::Failed)break;
+				  usleep(500);
+			}
     }
 }
+
+struct Result
+{
+	struct Sub
+	{
+		string title;
+		int score;
+		Sub(string title, int score):title(title),score(score){}
+		void save(FILE *file)
+		{
+			fprintf(file, "[\"%s\",%d]", title.c_str(), score);
+		}
+	};
+	vector<Sub> stack;
+	Result(){}
+	void push(Sub sub)
+	{
+		stack.push_back(sub);
+	}
+	void pop()
+	{
+		if(stack.size() != 0)
+			stack.pop_back();
+	}
+	void save(const char* filename)
+	{
+		FILE* file = fopen(filename, "w");
+		fprintf(file, "[");
+		for(int i = 0;i < (int)stack.size(); i++)
+		{
+			if(i)fprintf(file, ",");
+			stack[i].save(file);
+		}
+		fprintf(file, "]");
+		fclose(file);
+	}
+};
 
 int client_index;
 int status_id;
@@ -271,6 +315,22 @@ LL memory_limit;
 int test_count;
 
 map<string, LL> status;
+Result result;
+
+Result::Sub flag2sub(int flag)
+{
+	switch(flag)
+	{
+		case RESULT_WA:return Result::Sub("Wrong Answer", 0);break;
+		case RESULT_TLE:return Result::Sub("Time Limit Exceeded", 0);break;
+		case RESULT_MLE:return Result::Sub("Memory Limit Exceeded", 0);break;
+		case RESULT_OLE:return Result::Sub("Output Limit Exceeded", 0);break;
+		case RESULT_RE:return Result::Sub("Runtime Error", 0);break;
+		case RESULT_CE:return Result::Sub("Compile Error", 0);break;
+		case RESULT_SE:return Result::Sub("System Error", 0);break;
+		default:return Result::Sub("Unknow", 0);break;
+	}
+}
 
 void update_status()
 {
@@ -291,6 +351,8 @@ void update_ce()
 
 void update_result()
 {
+	result.save("result");
+	execute_cmd("wget -q -O - --post-file=\"result\" %s%s/%d", host_path.c_str(), judger_update_status_result_path.c_str(), status_id);
 }
 
 bool compile(int language_id)

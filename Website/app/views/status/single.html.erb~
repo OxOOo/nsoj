@@ -27,7 +27,7 @@
 </pre>
 <% else %>
 <pre>
-<%= link_to "submit.zip", "status/#{@status.id}_submit.zip" %>
+<%= link_to "submit.zip", "/status/#{@status.id}_submit.zip" %>
 </pre>
 <% end %>
 
@@ -50,7 +50,29 @@
 	</div>
 <% else %>
 	<div class="panel panel-default">
-		<!-- Table -->
+		<table class="table table-hover">
+		  <thead>
+		  	<tr>
+		  		<th>结果</th>
+		  		<th>得分</th>
+		  	</tr>
+		  </thead>
+		  <tbody>
+		  	<% result = @status.result %>
+		  	<% if result != nil %>
+					<% obj = JSON.parse(json) %>
+					<% obj.each do |line| %>
+						<tr>
+							<td><%= line.first %></td>
+							<td><%= line.second %></td>
+						</tr>
+					<% end %>
+		  	<% end %>
+		  </tbody>
+		</table>
+	</div>
+<!--
+	<div class="panel panel-default">
 		<table class="table table-hover">
 		  <thead>
 		  	<tr>
@@ -98,4 +120,5 @@
 		  </tbody>
 		</table>
 	</div>
+-->
 <% end %>

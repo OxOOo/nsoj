@@ -18,6 +18,8 @@ using namespace std;
 
 int test_index; //测试数据组数
 int total_score; //单个测试点总分
+char* input_filename; //输入文件
+char* output_filename; //输出文件
 
 int add(int a, int b)
 {

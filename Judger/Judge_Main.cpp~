@@ -15,7 +15,6 @@ int daemon_init(void)
  	else if(pid != 0) exit(0); /* parent exit */
  	/* child continues */
  	setsid(); /* become session leader */
- 	chdir(oj_home.c_str()); /* change working directory */
  	umask(0); /* clear file mode creation mask */
  	close(0); /* close stdin */
  	close(1); /* close stdout */

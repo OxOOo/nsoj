@@ -90,8 +90,7 @@ int execute_cmd(const char * fmt, ...)
     	fclose(stdin);
     	fclose(stdout);
     	fclose(stderr);
-    	exec(cmd);
-    	exit(1);
+    	exit(system(cmd));
     }else{
     	int status = 0;
     	waitpid(pid,&status,0);
