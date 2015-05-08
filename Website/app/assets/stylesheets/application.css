@@ -13,7 +13,8 @@
  * require_tree .
  *= require_self
  *
- * require bootstrap-theme.min
- *= require bootstrap.min
- *= require extra
+ * require bootstrap-theme.min.css
+ *= require bootstrap.min.css
+ *= require nsoj-theme.css
+ *= require extra.css
  */

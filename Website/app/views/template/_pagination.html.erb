@@ -1,0 +1,25 @@
+<% if @total_page > 1 %>
+  <div class="text-center">
+    <nav>
+      <ul class="pagination">
+        <li>
+          <%= link_to path(1) do %>
+            <span aria-hidden="true">首页</span>
+          <% end %>
+        </li>
+        <% (max(1,@current_page-$page_range)..min(@total_page,@current_page+$page_range)).each do |page| %>
+          <li class=<%= 'active' if page == @current_page %> >
+            <%= link_to path(page) do%>
+              <%= page %><span class="sr-only">(current)</span>
+            <% end %>
+          </li>
+        <% end %>
+        <li>
+          <%= link_to path(@total_page) do %>
+            <span aria-hidden="true">尾页</span>
+          <% end %>
+        </li>
+      </ul>
+    </nav>
+  </div>
+<% end %>

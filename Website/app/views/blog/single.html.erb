@@ -1,0 +1,27 @@
+<h2><%= @blog.title %></h2>
+<div class="panel panel-default">
+  <div class="panel-body">
+    <article>
+      <%= sanitize @blog.body %>
+    </article>
+  </div>
+  <div class="panel-footer">
+    <small>
+      发表时间：<%= format_datetime(@blog.created_at) %>
+      最近修改：<%= format_datetime(@blog.updated_at) %>
+    </small>
+    BY <%= link_to @blog.user.nickname, user_datum_path(@blog.user) %>
+    <% if @current_user == @blog.user || (@current_user != nil && @current_user.access.is_admin) %>
+      <p class="pull-right">
+        <% if @current_user != nil && @current_user.access.is_admin %>
+          <%= link_to "置顶", blog_top_path(@blog) %>
+          <% if @blog.top != nil %>
+            <%= link_to "取消置顶", blog_untop_path(@blog) %>
+          <% end %>
+        <% end %>
+        <%= link_to "修改", blog_edit_path(@blog) %>
+        <%= link_to "删除", blog_delete_path(@blog) %>
+      </p>
+    <% end %>
+  </div>
+</div>

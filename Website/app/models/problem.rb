@@ -2,63 +2,70 @@
 require 'zip'
 
 class Problem < ActiveRecord::Base
+  validates :name, presence: {message: "题目名称不能为空"},length: {maximum: 50, message: "题目名称长度不能超过50"}
+	validates :origin_id, length: {maximum: 20, message: "原题库ID长度不能超过20"}
+	validate :check_origin_id
+
+	belongs_to :user
+	belongs_to :online_judge
 	belongs_to :problem_type
+	has_one :statistic, as: :statisticable
+	has_many :submissions, through: :statistic
 	
-	validates :title, presence: {message: "标题不能未空"}, length: {maximum: 50, message: "标题长度不能超过50"}
+	scope :not_hide, ->{ where(["hide = ?", false]) }
 	
-	scope :visible, -> { where(show: true) }
+	after_create do
+		Dir.mkdir("public/problems") if not Dir.exists?("public/problems")
+		FileUtils.rm_r("public/problems/#{self.id}") if Dir.exists?("public/problems/#{self.id}")
+		Dir.mkdir("public/problems/#{self.id}") if not Dir.exists?("public/problems/#{self.id}")
+	end
+	
+	after_save do
+	  self.create_statistic if not self.statistic
+	  self.update!(:origin_id=>self.id) if OnlineJudge::Local && self.online_judge_id == OnlineJudge::Local.id && self.origin_id.to_i != self.id
+	end
 	
 	def description
-		return nil if not File.exists?("public/problems/#{self.id}/description")
-		file = File.open("public/problems/#{self.id}/description", "r")
-		str = file.read
-		file.close
-		return str
+		self.readfile("description")
 	end
 	
 	def description=(str)
-		File.open("public/problems/#{self.id}/description", "w") do |file|
-			file.write(str)
-		end
+		self.savefile("description", str)
+	end
+	
+	def hint
+		self.readfile("hint")
+	end
+	
+	def hint=(str)
+		self.savefile("hint", str)
 	end
 	
 	def spj
-		return nil if not File.exists?("public/problems/#{self.id}/spj")
-		file = File.open("public/problems/#{self.id}/spj", "r")
-		str = file.read
-		file.close
-		return str
+		self.readfile("spj")
 	end
 	
 	def spj=(str)
-		File.open("public/problems/#{self.id}/spj", "w") do |file|
-			file.write(str)
-		end
+		self.savefile("spj", str)
 	end
 	
 	def spj_file
-		file_name = "public/problems/#{self.id}/spj"
-		file_name = nil if not File.exists?(file_name)
+		file_name = "/problems/#{self.id}/spj"
+		file_name = nil if not File.exists?("public" + file_name)
 		return file_name
 	end
 	
 	def front
-		return nil if not File.exists?("public/problems/#{self.id}/front")
-		file = File.open("public/problems/#{self.id}/front", "r")
-		str = file.read
-		file.close
-		return str
+		self.readfile("front")
 	end
 	
 	def front=(str)
-		File.open("public/problems/#{self.id}/front", "w") do |file|
-			file.write(str)
-		end
+		self.savefile("front", str)
 	end
 	
 	def front_file
-		file_name = "public/problems/#{self.id}/front"
-		file_name = nil if not File.exists?(file_name)
+		file_name = "/problems/#{self.id}/front"
+		file_name = nil if not File.exists?("public" + file_name)
 		return file_name
 	end
 	
@@ -74,22 +81,16 @@ class Problem < ActiveRecord::Base
 	end
 	
 	def back
-		return nil if not File.exists?("public/problems/#{self.id}/back")
-		file = File.open("public/problems/#{self.id}/back", "r")
-		str = file.read
-		file.close
-		return str
+		self.readfile("back")
 	end
 	
 	def back=(str)
-		File.open("public/problems/#{self.id}/back", "w") do |file|
-			file.write(str)
-		end
+		self.savefile("back", str)
 	end
 	
 	def back_file
-		file_name = "public/problems/#{self.id}/back"
-		file_name = nil if not File.exists?(file_name)
+		file_name = "/problems/#{self.id}/back"
+		file_name = nil if not File.exists?("public" + file_name)
 		return file_name
 	end
 	
@@ -100,14 +101,27 @@ class Problem < ActiveRecord::Base
 		if lines.length <= 5
 			return lines.join
 		else
-			return "...\n#{lines[lines.length-5,5].join}"
+			return "...\n#{lines[lines.length-5,lines.length].join}"
 		end
 	end
 	
-	def data=(io)
+	def set_data(io)
 		File.open("public/problems/#{self.id}/data.zip", "wb") do |file|
 			file.write(io.read)
 		end
+		list = []
+		Zip::File.open("public/problems/#{self.id}/data.zip") do |zipfile|
+			(1..self.test_count).each do |index|
+			  list << index if zipfile.glob("input#{index}.txt").first && zipfile.glob("output#{index}.txt").first
+		  end
+		end
+		return list
+	end
+	
+	def data_file
+	  file_name = "/problems/#{self.id}/data.zip"
+		file_name = nil if not File.exists?("public" + file_name)
+		return file_name
 	end
 	
 	def data_input(index)
@@ -128,9 +142,10 @@ class Problem < ActiveRecord::Base
 		return nil
 	end
 	
-	def new_record
+	def new_problem
 		problem = self.dup
 		problem.save!
+		Dir.mkdir("public/problems/#{problem.id}") if not Dir.exists?("public/problems/#{problem.id}")
 		Dir.entries("public/problems/#{self.id}").each do |sub|
 	  	if sub != '.' && sub != '..'
 			  if File.directory?("public/problems/#{self.id}/#{sub}")
@@ -143,23 +158,44 @@ class Problem < ActiveRecord::Base
 	  return problem
 	end
 	
-	private
-		def rmdir(path)
-			Dir.entries(path).each do |sub|
-		  	if sub != '.' && sub != '..'
-				  if File.directory?("#{path}/#{sub}")
-				    rmdir("#{path}/#{sub}")
-				  else
-				    File.delete("#{path}/#{sub}")
-		    	end
-		  	end
-		  end
-		  Dir.delete(path)
+	def visible(from_contest = false)
+		if self.hide == true
+			return false
 		end
-	
-	after_create do
-		Dir.mkdir("public/problems") if not Dir.exists?("public/problems")
-		rmdir("public/problems/#{self.id}") if Dir.exists?("public/problems/#{self.id}")
-		Dir.mkdir("public/problems/#{self.id}") if not Dir.exists?("public/problems/#{self.id}")
+		if from_contest == true
+			return true
+		end
+		Contest.hide_problem.each do |contest|
+			if contest.exists?(self)
+				return false
+			end
+		end
+		return true
 	end
+	
+	protected
+	  def readfile(fname)
+	    file_name = "public/problems/#{self.id}/#{fname}"
+		  file = File.new(file_name, "r") if File.exists?(file_name)
+		  str = nil
+		  str = file.sysread(file.size).force_encoding("utf-8") if file != nil
+		  file.close if file != nil
+		  return str
+		end
+	  
+	  def savefile(fname, str)
+	    Dir.mkdir("public/problems") if not Dir.exists?("public/problems")
+		  Dir.mkdir("public/problems/#{self.id}") if not Dir.exists?("public/problems/#{self.id}")
+		
+		  file_name = "public/problems/#{self.id}/#{fname}"
+		  file = File.new(file_name, "w")
+		  file.syswrite(str) if file != nil
+	  end
+	  
+	  def check_origin_id
+	    if not Regexp.new("\\A#{self.online_judge.regexp}\\z").match(self.origin_id)
+        errors[:origin_id] << "编号 #{self.origin_id} 不符合 #{self.online_judge.name} 的规范，提示：#{self.online_judge.hint}"
+    	end
+	  end
+	  
 end

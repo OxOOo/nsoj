@@ -1,0 +1,6 @@
+<h3><%= link_to @user.nickname, user_datum_path(@user) %> 的博客</h3>
+
+<%= render 'list', :blogs => @blogs %>
+
+<%= pagination(:total_page=>@total_page, :current_page=>@current_page) { |page| blog_person_path(@user, page) } %>
+

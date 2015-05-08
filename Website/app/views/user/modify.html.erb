@@ -1,0 +1,72 @@
+<%= render "template/form_errors", :errors => @user.errors %>
+<%= form_for @user, url: user_modify_datum_path, method: :post, html: {class: "form-horizontal", role: "form"} do |f| %>
+	<fieldset>
+		<legend>修改基本资料</legend>
+		<div class="form-group">
+    	<label class="col-sm-2 control-label"><span style="color:red">*</span>用户名：</label>
+    	<div class="col-sm-3">
+    		<%= f.text_field :username, class: "form-control", disabled: "" %>
+    	</div>
+  	</div>
+  	<div class="form-group">
+    	<label class="col-sm-2 control-label"><span style="color:red">*</span>密码：</label>
+    	<div class="col-sm-3">
+    		<%= f.text_field :password, type: "password", class: "form-control", placeholder: "请输入密码" %>
+    	</div>
+  	</div>
+  	<div class="form-group">
+    	<label class="col-sm-2 control-label">昵称：</label>
+    	<div class="col-sm-3">
+      	<%= f.text_field :nickname, class: "form-control", placeholder: "请输入昵称" %>
+    	</div>
+  	</div>
+  	<div class="form-group">
+    	<label class="col-sm-2 control-label">签名：</label>
+    	<div class="col-sm-3">
+      	<%= f.text_area :sign, class: "form-control", placeholder: "请输入签名" %>
+    	</div>
+  	</div>
+  	<div class="form-group">
+    	<label class="col-sm-2 control-label"></label>
+    	<div class="col-sm-3">
+      	<%= f.submit "修改", class: "btn btn-default" %>
+    	</div>
+  	</div>
+	</fieldset>
+<% end %>
+
+<%= form_for @user, url: user_modify_password_path, method: :post, html: {class: "form-horizontal", role: "form"} do |f| %>
+	<fieldset>
+		<legend>修改密码</legend>
+		<div class="form-group">
+    	<label class="col-sm-2 control-label"><span style="color:red">*</span>用户名：</label>
+    	<div class="col-sm-3">
+    		<%= f.text_field :username, class: "form-control", disabled: "" %>
+    	</div>
+  	</div>
+  	<div class="form-group">
+    	<label class="col-sm-2 control-label"><span style="color:red">*</span>原密码：</label>
+    	<div class="col-sm-3">
+    	  <input id="user_current_password" name="user[current_password]" type="password" class="form-control" placeholder="请输入原密码"/>
+    	</div>
+  	</div>
+  	<div class="form-group">
+    	<label class="col-sm-2 control-label"><span style="color:red">*</span>新密码：</label>
+    	<div class="col-sm-3">
+    		<%= f.text_field :password, type: "password", class: "form-control", placeholder: "请输入新密码" %>
+    	</div>
+  	</div>
+  	<div class="form-group">
+    	<label class="col-sm-2 control-label"><span style="color:red">*</span></label>
+    	<div class="col-sm-3">
+    		<%= f.text_field :password_confirmation, type: "password", class: "form-control", placeholder: "请再次输入新密码" %>
+    	</div>
+  	</div>
+  	<div class="form-group">
+    	<label class="col-sm-2 control-label"></label>
+    	<div class="col-sm-3">
+      	<%= f.submit "修改", class: "btn btn-default" %>
+    	</div>
+  	</div>
+	</fieldset>
+<% end %>

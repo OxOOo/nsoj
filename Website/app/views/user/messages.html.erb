@@ -1,0 +1,31 @@
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th></th>
+			<th>发信者</th>
+			<th>收信者</th>
+			<th>摘要</th>
+			<th>发信时间</th>
+			<th>读信时间</th>
+		</tr>
+	</thead>
+	<tbody>
+		<% @messages.each do |message| %>
+			<tr>
+				<td><%= raw (message.read==true)?('<span class="label label-success">已读</span>'):('<span class="label label-default">未读</span>')%></td>
+				<td><%= message.sender.nickname %></td>
+				<td><%= message.receiver.nickname %></td>
+				<td><%= link_to truncate(message.message, length: 17), user_show_message_path(message) %></td>
+				<td><%= format_datetime(message.created_at) %></td>
+				<td><%= (message.read==true)?format_datetime(message.updated_at):("未读") %></td>
+			</tr>
+		<% end %>
+		<% if @messages.size == 0%>
+		  <tr><td class="text-center" colspan="6">无</td></tr>
+		<% end %>
+	</toby>
+</table>
+
+<%= pagination(:total_page=>@total_page, :current_page=>@current_page) { |page| user_messages_path(page) } %>
+
+<%= render 'send_message' %>

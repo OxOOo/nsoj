@@ -1,1 +1,4 @@
-<br><br><br>
+<br/><br/><br/>
+<h5 class="text-center">访问地址： <%= @real_path %>(<%= PageNumberCounter.where(:path=>@real_path).take.times %>)</h5>
+<h5 class="text-center">服务器时间： <%= format_datetime(Time.now) %></h5>
+<h5 class="text-center">IP地址： <%= request.remote_ip %></h5>

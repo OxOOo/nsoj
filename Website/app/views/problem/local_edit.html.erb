@@ -1,0 +1,50 @@
+<%= form_for @problem, url: problem_edit_local_path(@problem), method: :post, html: {class: "form-horizontal"} do |f| %>
+  <fieldset>
+    <legend>编辑题目</legend>
+    <%= render 'template/form_errors', :errors => @problem.errors %>
+    <div class="form-group">
+		  <label class="col-sm-2 control-label">题目名称</label>
+		  <div class="col-sm-3">
+		  	<%= f.text_field :name, class: "form-control", placeholder: "请输入题目名称" %>
+		  </div>
+		</div>
+		<div class="form-group">
+		  <label class="col-sm-2 control-label">题目类型</label>
+		  <div class="col-sm-3">
+		  	<%= f.select :problem_type, options_from_collection_for_select(ProblemType::LocalList, "id", "name", @problem.problem_type.id), {}, {class: "form-control"} %>
+		  </div>
+		</div>
+		<div class="form-group">
+		  <label class="col-sm-2 control-label">时间限制(ms)</label>
+		  <div class="col-sm-3">
+		  	<%= f.number_field :time_limit, class: "form-control", placeholder: "请输入时间限制" %>
+		  </div>
+		</div>
+		<div class="form-group">
+		  <label class="col-sm-2 control-label">空间限制(B)</label>
+		  <div class="col-sm-3">
+		  	<%= f.number_field :memory_limit, class: "form-control", placeholder: "请输入空间限制" %>
+		  </div>
+		</div>
+		<div class="form-group">
+		  <label class="col-sm-2 control-label">测试数据组数</label>
+		  <div class="col-sm-3">
+		  	<%= f.number_field :test_count, class: "form-control", placeholder: "请输入测试数据组数" %>
+		  </div>
+		</div>
+		<div class="form-group">
+		  <div class="col-sm-offset-2 col-sm-3">
+		    <div class="checkbox">
+		      <label>
+		      	<%= f.check_box :hide %>隐藏题目
+		      </label>
+		    </div>
+		  </div>
+		</div>
+		<div class="form-group">
+		  <div class="col-sm-offset-2 col-sm-3">
+		  	<%= f.submit "确定", class: "btn btn-default" %>
+		  </div>
+		</div>
+  </fieldset>
+<% end %>

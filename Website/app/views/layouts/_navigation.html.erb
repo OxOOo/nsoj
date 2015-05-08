@@ -14,26 +14,84 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-      	<li><%= link_to '题库', problems_index_path %></li>
-      	<li><%= link_to '提交记录', status_index_path %></li>
+      	<li><%= link_to '题库', problem_index_path(1) %></li>
+      	<li><%= link_to '提交记录', status_index_path(1) %></li>
+      	<li><%= link_to '比赛', contest_index_path(1) %></li>
+      	<li><%= link_to '博客', blog_index_path(1) %></li>
+      	<li><%= link_to '排名', user_ranklist_path(1) %></li>
       	<li><%= link_to '帮助', help_path %></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
       	<% if @current_user == nil%>
-		    	<li><%= link_to '登录', users_login_path %></li>
-		      <li><%= link_to '注册', users_register_path %></li>
+		    	<li><%= link_to '登录', user_login_path %></li>
+		      <li><%= link_to '注册', user_register_path %></li>
       	<% else %>
+      	  <% if @current_user.access.has_access %>
+        	  <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                <span class="glyphicon glyphicon-th" aria-hidden="true"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                <% first = true %>
+                <% if @current_user.access.is_root %>
+                  <% if first == false %>
+                    <li class="divider"></li>
+                  <% end %>
+                  <% first = false %>
+                  
+                  <li><%= link_to '设置权限', root_path %></li>
+                <% end %>
+                <% if @current_user.access.is_admin %>
+                  <% if first == false %>
+                    <li class="divider"></li>
+                  <% end %>
+                  <% first = false %>
+                  
+                  <li><%= link_to '解/封ID', root_path %></li>
+                  <li><%= link_to '解/封IP', root_path %></li>
+                  <li><%= link_to '添加', root_path %></li>
+                  <li><%= link_to '修改评测器IP', root_path %></li>
+                  <li><%= link_to '修改配置', root_path %></li>
+                <% end %>
+                <% if @current_user.access.can_add_problem || @current_user.access.can_modify_problem %>
+                  <% if first == false %>
+                    <li class="divider"></li>
+                  <% end %>
+                  <% first = false %>
+                  
+                  <li><%= link_to '添加题目', problem_new_path %></li>
+                <% end %>
+                <% if @current_user.access.can_add_contest || @current_user.access.can_modify_contest %>
+                  <% if first == false %>
+                    <li class="divider"></li>
+                  <% end %>
+                  <% first = false %>
+                  
+                  <li><%= link_to '添加比赛', root_path %></li>
+                <% end %>
+              </ul>
+            </li>
+      	  <% end %>
 		    	<li class="dropdown">
-		        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%= @current_user.username %></a>
+		        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+		          <%= @current_user.nickname %>
+		          <sup class="text-danger">
+		            <%= @current_user.receive_messages.not_read.count if @current_user.receive_messages.not_read.count != 0 %>
+		          </sup>
+		        </a>
 		        <ul class="dropdown-menu" role="menu">
-		          <li><%= link_to '修改密码', users_edit_path %></li>
-		          <li><%= link_to '退出', users_logout_path %></li>
-		          <% if @current_user.admin %>
-				        <li class="divider"></li>
-				        <% ProblemType.all.each do |problem_type| %>
-				        	<li><%= link_to "添加#{problem_type.title}", problems_append_path(problem_type) %></li>
-				        <% end %>
-		          <% end %>
+		          <li><%= link_to '我的资料', user_datum_path(@current_user) %></li>
+		          <li><%= link_to '修改资料', user_modify_path %></li>
+		          <li class="divider"></li>
+		          <li><%= link_to user_messages_path(1) do %>
+		              我的消息<sup class="text-danger"><%= @current_user.receive_messages.not_read.count %></sup>
+		          <% end %></li>
+		          <li><%= link_to '发送消息', user_send_message_path %></li>
+		          <li class="divider"></li>
+		          <li><%= link_to '我的博客', blog_person_path(@current_user, 1) %></li>
+		          <li><%= link_to '发表新博客', blog_new_blog_path %></li>
+		          <li class="divider"></li>
+		          <li><%= link_to '退出', user_logout_path %></li>
 		        </ul>
 		      </li>
       	<% end %>

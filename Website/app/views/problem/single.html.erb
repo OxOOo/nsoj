@@ -1,0 +1,33 @@
+<div>
+	<h1 class="text-center"><%= "##{@problem.id}. #{@problem.name}"%></h1>
+	<small><%= @problem.problem_type.name %></small><br/>
+</div>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <small>
+      时间限制：<%= display_friendly_time(@problem.time_limit) %>
+      空间限制：<%= display_friendly_memory(@problem.memory_limit) %>
+      提交文件大小限制：<%= display_friendly_memory(@problem.answer_limit) %>
+    </small>
+  </div>
+  <div class="panel-body">
+  	<article>
+    	<%= sanitize @problem.description %>
+    </article>
+  </div>
+</div>
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-default" data-toggle="modal" data-target="#submitModal">
+	提交
+</button>
+
+<% if @current_user == nil %>
+  <%= render "submit_modal_login" %>
+<% else %>
+  <% if @problem.submit %>
+    <%= render "submit_modal_#{@problem.problem_type.id}" %>
+  <% else %>
+    <%= render "submit_modal_no" %>
+  <% end %>
+<% end %>

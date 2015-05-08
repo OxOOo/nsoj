@@ -1,0 +1,47 @@
+<%= form_for @problem, url: problem_edit_vjudge_path(@problem), method: :post, html: {class: "form-horizontal"} do |f| %>
+  <fieldset>
+    <legend>编辑题目</legend>
+    <%= render 'template/form_errors', :errors => @problem.errors %>
+    <div class="form-group">
+		  <label class="col-sm-2 control-label">题目编号</label>
+		  <div class="col-sm-3">
+		  	<%= f.text_field :origin_id, class: "form-control", placeholder: "请输入提交题目编号" %>
+		  </div>
+		</div>
+    <div class="form-group">
+		  <label class="col-sm-2 control-label">提交文件大小限制(B)</label>
+		  <div class="col-sm-3">
+		  	<%= f.number_field :answer_limit, class: "form-control", placeholder: "请输入提交文件大小限制" %>
+		  </div>
+		</div>
+		<div class="form-group">
+		  <div class="col-sm-offset-2 col-sm-3">
+		    <div class="checkbox">
+		      <label>
+		      	<%= f.check_box :hide %>隐藏题目
+		      </label>
+		    </div>
+		  </div>
+		</div>
+		<div class="form-group">
+		  <div class="col-sm-offset-2 col-sm-3">
+		    <div class="checkbox">
+		      <label>
+		      	<%= f.check_box :submit %>评测题目
+		      </label>
+		    </div>
+		  </div>
+		</div>
+		<div class="form-group">
+		  <label class="col-sm-2 control-label">题目提示(可空)</label>
+		  <div class="col-sm-8">
+		  	<%= render 'template/editor', :text_area=>f.text_area(:hint, class: "form-control editor") %>
+		  </div>
+		</div>
+		<div class="form-group">
+		  <div class="col-sm-offset-2 col-sm-3">
+		  	<%= f.submit "确定", class: "btn btn-default" %>
+		  </div>
+		</div>
+  </fieldset>
+<% end %>

@@ -1,24 +1,8 @@
-require 'zip'
-
 class WelcomeController < ApplicationController
-	
 	def index
+	  session[:test] = session[:test].to_i + 1
+	  if session[:test] % 5 == 0
+	    flash.now[:msg] = "message"
+	  end
 	end
-	
-	def help
-	end
-	
-	def post
-		result = ""
-		Zip::File.open(params[:submit][:file].path) do |zipfile|
-			zipfile.each do |entry|
-				result += entry.name + "\n"
-				File.open(entry.name, "wb") do |file|
-					file.write(entry.get_input_stream.read)
-				end
-			end
-		end
-		render plain: result
-	end
-	
 end

@@ -1,0 +1,15 @@
+<center>
+  <h3>新建题目</h3>
+  <p>
+    <% ProblemType::LocalList.each do |problem_type| %>
+      <%= button_to problem_type.name, problem_new_problem_commit_path(problem_type), 
+            class: "btn btn-default btn-lg", style: "width:20%", form: {"style"=>"display:inline"} %>
+    <% end %>
+  </p>
+  <p>
+    <% OnlineJudge::VJudgeList.each do |oj| %>
+      <%= button_to oj.name, problem_new_vjudge_commit_path(oj), 
+            class: "btn btn-default btn-lg", style: "width:10%", form: {"style"=>"display:inline"} %>
+    <% end %>
+  </p>
+</center>

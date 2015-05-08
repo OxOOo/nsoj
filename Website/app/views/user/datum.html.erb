@@ -1,0 +1,46 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-8">
+			<h4 class="text-center">基本资料</h4>
+			<dl class="dl-horizontal">
+				<dt></dt>
+				<dd>第 <%= @user.id %> 位用户</dd><br/>
+				<dt class="small">用户名：</dt>
+				<dd><%= @user.username %></dd><br/>
+				<dt class="small">昵称姓名：</dt>
+				<dd><%= @user.nickname %></dd><br/>
+				<dt class="small">签名：</dt>
+				<dd><%= @user.sign %></dd><br/>
+				<dt class="small">博客数量：</dt>
+				<dd><%= link_to @user.submissions_count, blog_person_path(@user, 1) %></dd><br/>
+				<dt class="small">通过题数：</dt>
+				<dd><%= @user.solved_count %></dd>
+				<dt class="small">通过次数：</dt>
+				<dd><%= @user.accepted_count %></dd>
+				<dt class="small">提交次数：</dt>
+				<dd><%= @user.submissions_count %></dd>
+			</dl>
+		</div>
+		<% if @user == @current_user %>
+	    <div class="col-md-4">
+		    <h4 class="text-center">最近的登录情况<sub><%= link_to '全部',user_entries_path(1) %></sub></h4>
+		    <table class="table">
+			    <thead>
+				    <tr>
+					    <th>登录IP</th>
+					    <th>登录时间</th>
+				    </tr>
+			    </thead>
+			    <tbody>
+				    <% @current_user.entries.limit($small_entry_number).each do |entry| %>
+					    <tr>
+						    <td><%= entry.ip %></td>
+						    <td><%= format_datetime(entry.created_at) %></td>
+					    </tr>
+				    <% end %>
+			    </tbody>
+		    </table>
+	    </div>
+		<% end %>
+	</div>
+</div>

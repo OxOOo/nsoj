@@ -1,0 +1,16 @@
+<div class="container">
+  <%= form_for @blog, url: blog_new_blog_path, method: :post do |f| %>
+    <fieldset>
+      <%= render "template/form_errors", :errors => @blog.errors %>
+      <div class="form-group">
+        <label>标题</label>
+        <%= f.text_field :title, class: "form-control", placeholder: "请输入标题" %>
+      </div>
+      <div class="form-group">
+        <label>内容</label>
+        <%= render 'template/editor', :text_area=>f.text_area(:body, class: "form-control editor") %>
+      </div>
+      <%= f.submit "发表", class: "btn btn-default" %>
+    </fieldset>
+  <% end %>
+</div>

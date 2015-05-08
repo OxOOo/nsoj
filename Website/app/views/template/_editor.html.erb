@@ -1,0 +1,13 @@
+<% content_for :head_extra do%>
+	<%= javascript_include_tag 'editor' %>
+	<%= stylesheet_link_tag 'editor' %>
+<% end %>
+
+<div class="control-group">
+	<a id="editor-button-editor" class="btn btn-default">编辑</a>
+	<a id="editor-button-preview" class="btn btn-link">预览</a>
+</div>
+<article>
+  <%= text_area %>
+  <div id="preview" class="preview"></div>
+</article>

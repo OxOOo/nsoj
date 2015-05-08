@@ -53,43 +53,56 @@ Rails.application.routes.draw do
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
+  
   root 'welcome#index'
-  get 'help' => 'welcome#help', as: 'help'
-  post 'help' => 'welcome#post'
+  get 'help' => 'welcome#help', as: :help
   
-  get 'problems' => 'problems#index', as: 'problems_index'
-  get 'problems/:problem_id' => 'problems#single', as: 'problems_single'
-  post 'problems/:problem_id' => 'problems#single_submit'
-  get 'problems/append/:problem_type' => 'problems#append', as: 'problems_append'
-  get 'problems/:problem_id/edit' => 'problems#edit', as: 'problems_edit'
-  patch 'problems/:problem_id/edit' => 'problems#edit_submit'
-  get 'problems/:problem_id/edit/description' => 'problems#edit_description', as: 'problems_edit_description'
-  patch 'problems/:problem_id/edit/description' => 'problems#edit_description_submit'
-  get 'problems/:problem_id/edit/judge' => 'problems#edit_judge', as: 'problems_edit_judge'
-  patch 'problems/:problem_id/edit/judge' => 'problems#edit_judge_submit'
+  get 'problems/new' => 'problem#new', as: :problem_new
+  post 'problems/new/problem/:problem_id' => 'problem#new_problem', as: :problem_new_problem_commit
+  post 'problems/new/:online_judge_id' => 'problem#new_vjudge', as: :problem_new_vjudge_commit
+  post 'problems/changeOJ/:online_judge_id' => 'problem#changeOJ', as: :problem_changeOJ
+  get 'problems/edit/:problem_id' => 'problem#edit', as: :problem_edit
+  post 'problems/vjudge/:problem_id' => 'problem#edit_vjudge_commit', as: :problem_edit_vjudge
+  post 'problems/local/:problem_id' => 'problem#edit_local_commit', as: :problem_edit_local
+  get 'problems/local/:problem_id/description' => 'problem#edit_description', as: :problem_edit_description
+  post 'problems/local/:problem_id/description' => 'problem#edit_description_commit'
+  get 'problems/local/:problem_id/judge' => 'problem#edit_judge', as: :problem_edit_judge
+  post 'problems/local/:problem_id/judge' => 'problem#edit_judge_commit'
+  get 'problems/:page' => 'problem#index', as: :problem_index
+  get 'problem/:problem_id' => 'problem#single', as: :problem_single
+  post 'problem/:problem_id' => 'problem#submit'
   
-  get 'status' => 'status#index', as: 'status_index'
-  get 'status/:status_id' => 'status#single', as: 'status_single'
-  get 'status/:status_id/rejudge' => 'status#rejudge', as: 'status_rejudge'
+  get 'contests/:page' => 'contest#index', as: :contest_index
   
-  get 'users/login' => 'users#login', as: 'users_login'
-  post 'users/login' => 'users#login_submit'
-  get 'users/logout' => 'users#logout', as: 'users_logout'
-  get 'users/register' => 'users#register', as: 'users_register'
-  post 'users/register' => 'users#register_submit'
-  get 'users/edit' => 'users#edit', as: 'users_edit'
-  patch 'users/edit' => 'users#edit_submit'
+  get 'blogs/person/:user_id/:page' => 'blog#person', as: :blog_person
+  get 'blogs/new' => 'blog#new_blog', as: :blog_new_blog
+  post 'blogs/new' => 'blog#new_blog_commit'
+  get 'blogs/:page' => 'blog#index', as: :blog_index
+  get 'blogs/single/:blog_id' => 'blog#single', as: :blog_single
+  get 'blogs/edit/:blog_id' => 'blog#edit', as: :blog_edit
+  post 'blogs/edit/:blog_id' => 'blog#edit_commit'
+  get 'blogs/delete/:blog_id' => 'blog#delete', as: :blog_delete
+  post 'blogs/delete/:blog_id' => 'blog#delete_commit'
+  get 'blogs/top/:blog_id' => 'blog#top', as: :blog_top
+  post 'blogs/top/:blog_id' => 'blog#top_commit'
+  get 'blogs/untop/:blog_id' => 'blog#untop', as: :blog_untop
+  post 'blogs/untop/:blog_id' => 'blog#untop_commit'
   
-  get 'judger/get_waiting_status' => 'judger#get_waiting_status', as: 'judger_get_waiting_status'
-  get 'judger/get_status_submit/:status_id' => 'judger#get_status_submit', as: 'judger_get_status_submit'
-  get 'judger/get_status_submit_zip/:status_id/:index' => 'judger#get_status_submit_zip', as: 'judger_get_status_submit_zip'
-  get 'judger/get_problem_info/:problem_id' => 'judger#get_problem_info', as: 'judger_get_problem_info'
-  get 'judger/get_problem_spj/:problem_id' => 'judger#get_problem_spj', as: 'judger_get_problem_spj'
-  get 'judger/get_problem_front/:problem_id' => 'judger#get_problem_front', as: 'judger_get_problem_front'
-  get 'judger/get_problem_back/:problem_id' => 'judger#get_problem_back', as: 'judger_get_problem_back'
-  get 'judger/get_problem_input/:problem_id/:index' => 'judger#get_problem_input', as: 'judger_get_problem_input'
-  get 'judger/get_problem_output/:problem_id/:index' => 'judger#get_problem_output', as: 'judger_get_problem_output'
-  post 'judger/update_status_info/:status_id' => 'judger#update_status_info', as: 'judger_update_status_info'
-  post 'judger/update_status_ce/:status_id' => 'judger#update_status_ce', as: 'judger_update_status_ce'
-  post 'judger/update_status_result/:status_id' => 'judger#update_status_result', as: 'judger_update_status_result'
+  get 'status/:page' => 'status#index', as: :status_index
+  
+  get 'user/ranklist/:page' => 'user#ranklist', as: :user_ranklist
+  get 'user/login' => 'user#login', as: :user_login
+  post 'user/login' => 'user#login_commit'
+  get 'user/register' => 'user#register', as: :user_register
+  post 'user/register' => 'user#register_commit'
+  get 'user/datum/:user_id' => 'user#datum', as: :user_datum
+  get 'user/modify' => 'user#modify', as: :user_modify
+  post 'user/modify/password' => 'user#modify_password', as: :user_modify_password
+  post 'user/modify/datum' => 'user#modify_datum', as: :user_modify_datum
+  get 'user/logout' => 'user#logout', as: :user_logout
+  get 'user/messages/:page' => 'user#messages', as: :user_messages
+  get 'user/message/:message_id' => 'user#show_message', as: :user_show_message
+  get 'user/send_message' => 'user#send_message', as: :user_send_message
+  post 'user/send_message' => 'user#send_message_commit'
+  get 'user/entries/:page' => 'user#entries', as: :user_entries
 end

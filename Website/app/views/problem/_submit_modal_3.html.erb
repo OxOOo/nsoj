@@ -1,0 +1,22 @@
+<!-- Modal -->
+<div class="modal fade" id="submitModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+      	<%= form_for :submission, url: problem_single_path(@problem) do |f| %>
+					<div class="container-fluid">
+						<div class="form-group">
+							<%= f.select :language, options_from_collection_for_select(@problem.problem_type.languages, "id", "name"), {}, {class: "form-control" } %>
+						</div>
+						<div class="form-group">
+							<pre><%= display_code @problem.front_slightly %></pre>
+							<%= f.text_area :code, class: "form-control", rows: "20" %>
+							<pre><%= display_code @problem.back_slightly %></pre>
+						</div>
+						<%= f.submit "提交", class: "pull-right btn btn-default" %>
+					</div>
+				<% end %>
+      </div>
+    </div>
+  </div>
+</div>

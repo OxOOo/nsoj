@@ -1,0 +1,14 @@
+<h1 class="text-center"><%= "##{@problem.id}. #{@problem.name}" %></h1>
+<div class="container">
+  <%= form_for @problem, url: problem_edit_description_path(@problem), method: :post do |f| %>
+    <fieldset>
+      <%= render "template/form_errors", :errors => @problem.errors %>
+      <div class="form-group">
+        <label>描述</label>
+        <%= render 'template/editor', :text_area=>f.text_area(:description, class: "form-control editor") %>
+      </div>
+      <%= f.submit "确定", class: "btn btn-default" %>
+      <button class="btn btn-success histroy-back">上一步</button>
+    </fieldset>
+  <% end %>
+</div>

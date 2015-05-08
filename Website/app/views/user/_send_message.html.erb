@@ -1,0 +1,24 @@
+<%= form_for @send_message, url: user_send_message_path, method: :post, html: {class: "form-horizontal", role: "form"} do |f| %>
+	<fieldset <%= "disabled" if not $can_message %> >
+		<legend>发送私信</legend>
+		<%= render "template/form_errors", :errors => @send_message.errors %>
+		<div class="form-group">
+    	<label class="col-sm-2 control-label"><span style="color:red">*</span>收信人：</label>
+    	<div class="col-sm-3">
+    		<%= f.text_field :receiver, class: "form-control", placeholder: "请输入收信人用户名", value: (@send_message.receiver.username if @send_message.receiver) %>
+    	</div>
+  	</div>
+  	<div class="form-group">
+    	<label class="col-sm-2 control-label"><span style="color:red">*</span>内容：</label>
+    	<div class="col-sm-8">
+      	<%= f.text_area :message, class: "form-control", placeholder: "请输入内容", rows: "10" %>
+    	</div>
+  	</div>
+  	<div class="form-group">
+    	<label class="col-sm-2 control-label"></label>
+    	<div class="col-sm-3">
+      	<%= f.submit "发送", class: "btn btn-default" %>
+    	</div>
+  	</div>
+	</fieldset>
+<% end %>

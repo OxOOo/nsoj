@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Website</title>
+  <title><%= @website_title == nil ? "南山在线评测系统" : @website_title %></title>
+  <meta charset='utf-8' />
+  <link rel="shortcut icon" href="<%= asset_path("logo.png") %>" />
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
@@ -10,7 +12,7 @@
 </head>
 <body>
 
-	<div class="container">
+  <div class="container">
 		<%= render "layouts/header" %>
 		<%= render "layouts/navigation" %>
 		<%= render "layouts/message" %>
